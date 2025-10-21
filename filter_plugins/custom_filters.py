@@ -1,4 +1,5 @@
 import json
+from json import JSONDecodeError
 from xml.etree.ElementTree import fromstring
 from typing import Union
 
@@ -69,6 +70,9 @@ class FilterModule(object):
         for op_result in data:
             stdout = op_result.get("stdout")
             if stdout:
-                stdout = json.loads(stdout)
+                try:
+                    stdout = json.loads(stdout)
+                except JSONDecodeError:
+                    return False
                 if stdout.get("response").get("result"):
                     return True

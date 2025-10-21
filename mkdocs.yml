@@ -43,6 +43,7 @@ nav:
   - User Guide:
       - Introduction: user_guide/introduction.md
       - Preset Policy: user_guide/preset_policy.md
+      - Preset URL Lists: user_guide/preset_policy_urls.md
       - New Policy Creation: user_guide/new_policy_creation.md
       - Testing Security Policies: user_guide/policy_lookup.md
   - Reference:

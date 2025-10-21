@@ -10,4 +10,4 @@
     device_group: Lab # Finally, we set the device group!
   when:
     - "source_ip is defined or source_user is defined"
-    - url is defined
+    - url is defined and url != None

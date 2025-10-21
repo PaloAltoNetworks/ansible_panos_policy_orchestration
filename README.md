@@ -6,9 +6,9 @@
 ![GitHub License](https://img.shields.io/github/license/adambaumeister/ansible_panos_policy_orchestration)
 ![GitHub Repo stars](https://img.shields.io/github/stars/adambaumeister/ansible_panos_policy_orchestration)
 ![GitHub Release](https://img.shields.io/github/v/release/adambaumeister/ansible_panos_policy_orchestration)
+![Github Pages](https://img.shields.io/badge/github-pages-black?logo=githubpages&link=https%3A%2F%2Fadambaumeister.github.io%2Fansible_panos_policy_orchestration%2F)
 
-
-
+Docs: https://adambaumeister.github.io/ansible_panos_policy_orchestration/
 
 This repository provides a framework and a philosophy for creating PAN-OS security policies
 via Automation.

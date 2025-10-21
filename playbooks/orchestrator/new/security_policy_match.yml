@@ -1,6 +1,23 @@
 ---
 # Runs test security-policy-match based on the given parameters
 
+- name: Set Test XML
+  set_fact:
+    test_xml: |
+          <test>
+            <security-policy-match>
+              <source>{{ source_ip }}</source>
+              <destination>{{ destination_ip }}</destination>
+              <application>{{ application | default('ssl') }}</application>
+              <protocol>6</protocol>
+              <destination-port>443</destination-port>
+            </security-policy-match>
+          </test>
+
+- name: Print the test parameters
+  debug:
+    msg: "{{ test_xml }}"
+
 - name: Test the Current Security policy
   block:
     - name: Test the current status of the security policy using all parameters
@@ -10,16 +27,7 @@
           username: "{{ provider.username }}"
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
-        cmd: |
-          <test>
-            <security-policy-match>
-              <source>{{ source_ip }}</source>
-              <destination>{{ destination_ip }}</destination>
-              <application>{{ application }}</application>
-              <protocol>{{ protocol }}</protocol>
-              <destination-port>{{ destination_port }}</destination-port>
-            </security-policy-match>
-          </test>
+        cmd: "{{ test_xml }}"
         cmd_is_xml: true
       register: security_policy_match_result
   rescue:
@@ -30,18 +38,13 @@
           username: "{{ provider.username }}"
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
-        cmd: |
-          <test>
-            <security-policy-match>
-              <source>{{ source_ip }}</source>
-              <destination>{{ destination_ip }}</destination>
-              <application>ssl</application>
-              <protocol>6</protocol>
-              <destination-port>443</destination-port>
-            </security-policy-match>
-          </test>
+        cmd: "{{ test_xml }}"
         cmd_is_xml: true
       register: security_policy_match_result
+
+- name: Print the result
+  debug:
+    msg: "{{ security_policy_match_result }}"
 
 - name: Set the policy match result
   set_fact:

@@ -79,19 +79,23 @@
       ansible.builtin.include_tasks:
         file: new/lookup_policy.yml
 
-    - name: RULE creation
-      ansible.builtin.include_tasks:
-        file: new/create_policy.yml
+    - name: Create Rule Block
+      block:
+        - name: RULE creation
+          ansible.builtin.include_tasks:
+            file: new/create_policy.yml
 
-    - name: Update that the config has changed
-      ansible.builtin.set_fact:
-        config_changed: true
+        - name: Update that the config has changed
+          ansible.builtin.set_fact:
+            config_changed: true
+      when:
+        - not matches_existing_policy
 
   when:
     - not policy_match
-    - source_ip
-    - destination_ip
-    - application
+    - source_ip is defined and source_ip != ""
+    - destination_ip is defined and destination_ip != ""
+    - application is defined and application != ""
 
 
 - name: Commit Block - Triggers on any change
@@ -116,13 +120,13 @@
 
 - name: Test the changes, if there were changes
   block:
-  - name: Test the new policy, if one was added
-    ansible.builtin.include_tasks:
-      file: new/lookup_policy.yml
+    - name: Test the new policy, if one was added
+      ansible.builtin.include_tasks:
+        file: new/lookup_policy.yml
 
-  - name: Print the results
-    ansible.builtin.debug:
-      msg: '{{ matches_existing_policy }}'
+    - name: Print the results
+      ansible.builtin.debug:
+        msg: '{{ matches_existing_policy }}'
   when:
     - config_changed
     - source_ip is defined
