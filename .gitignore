@@ -38,3 +38,5 @@ Thumbs.db
 inventory_real.yml
 collections
 logs
+
+.venv

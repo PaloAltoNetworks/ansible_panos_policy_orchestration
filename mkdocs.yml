@@ -35,6 +35,7 @@ theme:
     - navigation.tabs.sticky
     - content.code.copy
     - content.code.select
+  logo: img/icon_white.svg
 
 repo_url: https://github.com/adambaumeister/ansible_panos_policy_orchestration
 
