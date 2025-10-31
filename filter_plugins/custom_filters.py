@@ -3,6 +3,7 @@ from json import JSONDecodeError
 from xml.etree.ElementTree import fromstring
 from typing import Union
 
+
 class FilterModule(object):
     def filters(self):
         return {
@@ -30,7 +31,6 @@ class FilterModule(object):
             interfaces.append(interface)
 
         return interfaces
-
 
     def panos_op_stdout_results_to_list(self, data: Union[list, dict]) -> list:
         """Takes a list of result dictionaries of command results for panos_op and returns a list of all the
