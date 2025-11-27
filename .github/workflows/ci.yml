@@ -33,7 +33,7 @@ jobs:
 
       - name: Ansible lint
         run: |
-          ansible-lint playbooks/
+          ansible-lint ansible_collections/paloaltonetworks/panos_policy_automation/
 
   python-tests:
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
       - name: Run custom filter tests
         run: |
           cd filter_plugins
-          python -m pytest test_custom_filters.py -v
+          python -m pytest ansible_collections/paloaltonetworks/panos_policy_automation/plugins/filter/test_custom_filters.py -v
 
   secrets-scan:
     runs-on: ubuntu-latest
