@@ -5,27 +5,20 @@
 
 # --- START PRESET POLICY SECTION ---
 # This section of tasks automatically updates existing, pre-built policies by simply updating existing address-groups
-# and given applications to the given application groups.
-# This allows for maximum control over the brownfield policy, but will only catch certain use cases.
+# For this to work, you must provide the following variables:
+#   - policy_files
+#     Should be a list containing files, which themselves contain tasks.
 
 - name: Set Defaults
   ansible.builtin.set_fact:
     config_changed: false
 
-# WEBSERVERS EXAMPLE
+# Include tasks from user-provided task files
 - name: Test against Webserver outbound policy
   ansible.builtin.include_tasks:
-    file: preset/webservers_outbound_policy.yml
+    file: "{{ item }}"
+  loop: "{{ policy_files }}"
 
-# SSH Jump Server Policy
-- name: Test against SSH Jumpserver inbound policy
-  ansible.builtin.include_tasks:
-    file: preset/ssh_jumpserver_inbound_access.yml
-
-# Outbound User access to websites
-- name: Test against outbound user access
-  ansible.builtin.include_tasks:
-    file: preset/user_outbound_policy.yml
 
 # --- END PRESET POLICY SECTION ---
 
