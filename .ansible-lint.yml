@@ -1,7 +1,7 @@
 ---
 # ansible-lint configuration
 
-profile: basic
+profile: production
 
 skip_list:
   - key-order

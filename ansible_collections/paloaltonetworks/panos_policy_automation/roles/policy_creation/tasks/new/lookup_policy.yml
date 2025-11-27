@@ -15,19 +15,19 @@
 # Requires either 'device_group' or 'default_new_policy_device_group' to be set
 
 - name: Populate all facts for policy
-  set_fact:
+  ansible.builtin.set_fact:
     destination_port: "{{ destination_port | default('443') }}"
     protocol: "{{ protocol | default('6') }}"
     application: "{{ application | default('ssl') }}"
 
 - name: Set the operating device group
-  set_fact:
+  ansible.builtin.set_fact:
     _device_group: "{{ device_group }}"
   when:
     - device_group is defined
 
 - name: Set the operating device group
-  set_fact:
+  ansible.builtin.set_fact:
     _device_group: "{{ default_new_policy_device_group }}"
   when:
     - default_new_policy_device_group is defined
@@ -41,15 +41,15 @@
       register: _show_devices_output
 
     - name: Set JSON Object for stdout
-      set_fact:
-        _show_devices_output_dict: "{{ _show_devices_output | panos_op_stdout_to_dict }}"
+      ansible.builtin.set_fact:
+        _show_devices_output_dict: "{{ _show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}"
 
     - name: Set the list of items
-      set_fact:
+      ansible.builtin.set_fact:
         _device_list: "{{ _show_devices_output_dict.response.result.devices.entry }}"
 
     - name: Set the list of items (if single item response)
-      set_fact:
+      ansible.builtin.set_fact:
         _device_list:
           - "{{ _show_devices_output_dict.response.result.devices.entry }}"
       when: "_show_devices_output_dict.response.result.devices.entry is mapping"

@@ -97,7 +97,6 @@
     - destination_ip is defined and destination_ip != ""
     - application is defined and application != ""
 
-
 - name: Commit Block - Triggers on any change
   block:
     - name: COMMIT all changes
@@ -126,7 +125,7 @@
 
     - name: Print the results
       ansible.builtin.debug:
-        msg: '{{ matches_existing_policy }}'
+        msg: "{{ matches_existing_policy }}"
   when:
     - config_changed
     - source_ip is defined

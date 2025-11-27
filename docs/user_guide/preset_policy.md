@@ -112,7 +112,7 @@ directory, but you can put it whever makes sense for your environment.
 
 ### Including the policy
 
-Now we **include** our new policy it as part of the [add_policy.yml](../../playbooks/orchestrator/add_policy.yml) playbook. 
+Now we **include** our new policy it as part of the [add_policy.yml](../../ansible_collections/playbooks/orchestrator/add_policy.yml) playbook. 
 
 
 ```yaml title="add_policy.yml"

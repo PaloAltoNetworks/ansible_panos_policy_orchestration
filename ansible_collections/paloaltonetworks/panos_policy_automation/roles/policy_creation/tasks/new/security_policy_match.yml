@@ -4,15 +4,15 @@
 - name: Set Test XML
   set_fact:
     test_xml: |
-          <test>
-            <security-policy-match>
-              <source>{{ source_ip }}</source>
-              <destination>{{ destination_ip }}</destination>
-              <application>{{ application | default('ssl') }}</application>
-              <protocol>6</protocol>
-              <destination-port>443</destination-port>
-            </security-policy-match>
-          </test>
+      <test>
+        <security-policy-match>
+          <source>{{ source_ip }}</source>
+          <destination>{{ destination_ip }}</destination>
+          <application>{{ application | default('ssl') }}</application>
+          <protocol>6</protocol>
+          <destination-port>443</destination-port>
+        </security-policy-match>
+      </test>
 
 - name: Print the test parameters
   debug:
@@ -48,4 +48,4 @@
 
 - name: Set the policy match result
   set_fact:
-    matches_existing_policy: "{{ security_policy_match_result | panos_op_policy_match_result_to_bool }}"
+    matches_existing_policy: "{{ security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}"

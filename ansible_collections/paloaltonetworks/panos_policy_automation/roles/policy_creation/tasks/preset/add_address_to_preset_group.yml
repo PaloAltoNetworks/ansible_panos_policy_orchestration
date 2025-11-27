@@ -25,7 +25,6 @@
     state: gathered
   register: existing_group
 
-
 - name: Add ADDRESS object to preset ADDRESS GROUP
   paloaltonetworks.panos.panos_address_group:
     provider: "{{ provider }}"

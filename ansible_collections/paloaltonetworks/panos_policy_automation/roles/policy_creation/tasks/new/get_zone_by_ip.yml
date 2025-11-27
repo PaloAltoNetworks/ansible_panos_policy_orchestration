@@ -3,7 +3,7 @@
 # loop so that it handles devices that have either ARE or virtual routers configured.
 
 - name: Set the routing table result list
-  set_fact:
+  ansible.builtin.set_fact:
     _show_route: []
   when:
     - _show_route is not defined
@@ -31,11 +31,11 @@
       register: _show_route_result
 
 - name: Parse as JSON
-  set_fact:
+  ansible.builtin.set_fact:
     _show_route_result_dict: "{{ _show_route_result.stdout | from_json }}"
 
 - name: Set list of virtual routers
-  set_fact:
+  ansible.builtin.set_fact:
     _virtual_routers: "{{ _virtual_routers | d([]) + [route['virtual-router']] }}"
   loop: "{{ _show_route_result_dict.response.result.entry }}"
   loop_control:
@@ -56,8 +56,8 @@
     loop_var: vr
 
 - name: Get interfaces from results
-  set_fact:
-    _interface_list: "{{ _test_routing_result.results | panos_op_routing_result_to_interfaces }}"
+  ansible.builtin.set_fact:
+    _interface_list: "{{ _test_routing_result.results | paloaltonetworks.panos_policy_automation.panos_op_routing_result_to_interfaces }}"
 
 - name: Get the zone
   paloaltonetworks.panos.panos_op:
@@ -70,5 +70,5 @@
   register: _show_interfaces_result
 
 - name: Set the ZONE list
-  set_fact:
-    destination_zones: "{{ destination_zones | default([]) + _show_interfaces_result | panos_op_get_zone_from_interface(_interface_list) | default([]) }}"
+  ansible.builtin.set_fact:
+    destination_zones: "{{ destination_zones | default([]) + _show_interfaces_result | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(_interface_list) | default([]) }}"
