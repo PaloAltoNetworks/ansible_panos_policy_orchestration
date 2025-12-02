@@ -35,8 +35,18 @@ jobs:
           npm install -g @semantic-release/commit-analyzer
           npm install -g @semantic-release/release-notes-generator
 
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the next version
+        run: |
+          echo "NEXT_VERSION=`semantic-release --no-ci --dry-run | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'`" >> "$GITHUB_OUTPUT"
+        id: get_version
 
-        run: semantic-release
+      - name: Update Ansible Galaxy file with the next version
+        run: |
+          sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' ansible_collections/paloaltonetworks/panos_policy_automation/galaxy.yml
+
+# Temp disable: don't do actual release yet
+#      - name: Run semantic-release
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#        run: semantic-release
