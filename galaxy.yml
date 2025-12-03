@@ -1,3 +1,4 @@
+---
 # SPDX-License-Identifier: MIT-0
 ### REQUIRED
 # The namespace of the collection. This can be a company/brand/organization or product namespace under which all
@@ -19,14 +20,13 @@ readme: README.md
 authors:
   - Adam Baumeister <abaumeister@paloaltonetworks.com>
 
-
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
 description: Automated policy creation based on preset object groups.
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
-license_file: 'LICENSE.md'
+license_file: "LICENSE.md"
 
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'

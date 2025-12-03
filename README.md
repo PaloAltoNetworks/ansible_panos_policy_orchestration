@@ -78,14 +78,14 @@ Here's an example:
 - name: Match webserver outbound policy
   ansible.builtin.set_fact:
     policy_match: true # Set the fact that we did match a policy
-    source_address_group: PRESET_LAB_WEB_OUTBOUND # In this case, the policy preset is an address_group type
+    policy_creation_source_address_group: PRESET_LAB_WEB_OUTBOUND # In this case, the policy preset is an address_group type
     application_group: PRESET_LAB_WEB_OUTBOUND # If an application is passed, we should also include it in the policy.
     device_group: Lab # Finally, we set the device group!
   when:
-    - source_ip is defined
-    - destination_ip is defined
-    - "'10.10.10.0/24' | ansible.utils.network_in_network( source_ip )"
-    - "not '10.0.0.0/8' | ansible.utils.network_in_network( destination_ip )"
+    - policy_creation_source_ip is defined
+    - policy_creation_destination_ip is defined
+    - "'10.10.10.0/24' | ansible.utils.network_in_network( policy_creation_source_ip )"
+    - "not '10.0.0.0/8' | ansible.utils.network_in_network( policy_creation_destination_ip )"
 ```
 
 ### Create the policy request, as an ansibles vars file
@@ -96,10 +96,10 @@ For simplicity, we do so within a vars file.
 
 ```yaml
 ---
-source_ip: 10.10.10.11
-destination_ip: 8.8.8.8
+policy_creation_source_ip: 10.10.10.11
+policy_creation_destination_ip: 8.8.8.8
 application: dns
-policy_files:
+policy_creation_policy_files:
   - example_outbound_policy_file.yml  # <---- Note we included your "policy file" here!
 ```
 
@@ -124,7 +124,7 @@ policy_files:
   tasks:
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ security_policy_match_result }}"
+        msg: "{{ policy_creation_security_policy_match_result }}"
 ```
 
 ### Execute the playbook

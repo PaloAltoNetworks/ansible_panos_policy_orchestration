@@ -14,8 +14,8 @@ Main orchestrator tasks file that coordinates the entire security policy workflo
 
 | Variable | Description |
 |----------|-------------|
-| `source_ip` | Source IP address for the policy |
-| `destination_ip` | Destination IP address for the policy |
+| `policy_creation_source_ip` | Source IP address for the policy |
+| `policy_creation_destination_ip` | Destination IP address for the policy |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
 
 ## Optional Variables
@@ -23,8 +23,8 @@ Main orchestrator tasks file that coordinates the entire security policy workflo
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `device_group` | Target device group | `default_new_policy_device_group` |
-| `source_address_group` | Preset source address group | N/A |
-| `destination_address_group` | Preset destination address group | N/A |
+| `policy_creation_source_address_group` | Preset source address group | N/A |
+| `policy_creation_destination_address_group` | Preset destination address group | N/A |
 | `application_group` | Preset application group | N/A |
 | `application` | Application name | N/A |
 
@@ -34,7 +34,7 @@ Main orchestrator tasks file that coordinates the entire security policy workflo
 |----------|-------------|
 | `policy_creation_config_changed` | Boolean indicating if configuration was modified |
 | `policy_match` | Boolean indicating if traffic matched a preset policy |
-| `matches_existing_policy` | Boolean from policy testing results |
+| `policy_creation_security_matches_existing_policy` | Boolean from policy testing results |
 
 ## Dependencies
 - Requires PAN-OS collection

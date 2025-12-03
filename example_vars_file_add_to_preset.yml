@@ -1,6 +1,6 @@
 ---
-source_ip: 10.10.10.11
-destination_ip: 8.8.8.8
-application: dns
-policy_files:
+policy_creation_source_ip: 10.10.10.11
+policy_creation_destination_ip: 8.8.8.8
+policy_creation_application: dns
+policy_creation_policy_files:
   - example_outbound_policy_file.yml

@@ -5,24 +5,24 @@
 - name: Get existing APPLICATION GROUP Objects
   paloaltonetworks.panos.panos_application_group:
     provider: "{{ provider }}"
-    device_group: "{{ device_group }}"
+    device_group: "{{ policy_creation_device_group }}"
     name: "{{ application_group }}"
     state: gathered
-  register: existing_group
+  register: policy_creation_existing_group
 
 - name: Add APPLICATION object to preset APPLICATION GROUP
   paloaltonetworks.panos.panos_application_group:
     provider: "{{ provider }}"
-    device_group: "{{ device_group }}"
+    device_group: "{{ policy_creation_device_group }}"
     name: "{{ application_group }}"
-    value: "{{ [application] + existing_group.gathered.value }}"
+    value: "{{ [policy_creation_application] + policy_creation_existing_group.gathered.value }}"
     state: present
-  register: group_addition
+  register: policy_creation_group_addition
 
 - name: Display results
   ansible.builtin.debug:
     msg: |-
-      App object: {{ application }}
+      App object: {{ policy_creation_application }}
       Added to group: {{ application_group }}
-      Device group: {{ device_group }}
-      Status: {{ 'SUCCESS' if group_addition is succeeded else 'FAILED' }}
+      Device group: {{ policy_creation_device_group }}
+      Status: {{ 'SUCCESS' if policy_creation_group_addition is succeeded else 'FAILED' }}

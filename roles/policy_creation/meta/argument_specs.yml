@@ -6,7 +6,7 @@ argument_specs:
       - >-
         The main entry point that includes all tasks.
     options:
-      policy_files:
+      policy_creation_policy_files:
         type: "list"
         elements: "str"
         required: true
@@ -16,19 +16,20 @@ argument_specs:
         type: "str"
         required: false
         description: "The source user for the new policy"
-      source_ip:
+      policy_creation_source_ip:
         type: "str"
         required: false
         description: "The the source IP for the new policy"
-      destination_ip:
+      policy_creation_destination_ip:
         type: "str"
         required: false
         description: "The the destination IP for the new policy"
-      application:
+      policy_creation_application:
         type: "str"
-        required: true
+        required: false
+        default: ssl
         description: "The PAN-OS compatible Application for the policy."
-      destination_port:
+      policy_creation_destination_port:
         type: "str"
         required: false
         default: "443"

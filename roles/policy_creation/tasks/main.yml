@@ -6,20 +6,19 @@
 # --- START PRESET POLICY SECTION ---
 # This section of tasks automatically updates existing, pre-built policies by simply updating existing address-groups
 # For this to work, you must provide the following variables:
-#   - policy_files
+#   - policy_creation_policy_files
 #     Should be a list containing files, which themselves contain tasks.
 
 - name: Set Defaults
   ansible.builtin.set_fact:
     policy_creation_config_changed: false
-    policy_match: false
+    policy_creation_policy_match: false
 
 # Include tasks from user-provided task files
 - name: Test against Webserver outbound policy
   ansible.builtin.include_tasks:
     file: "{{ item }}"
-  loop: "{{ policy_files }}"
-
+  loop: "{{ policy_creation_policy_files }}"
 
 # --- END PRESET POLICY SECTION ---
 
@@ -29,26 +28,26 @@
       ansible.builtin.include_tasks:
         file: preset/add_address_to_preset_group.yml
       vars:
-        _address: "{{ source_ip }}"
-        _address_group: "{{ source_address_group }}"
+        _address: "{{ policy_creation_source_ip }}"
+        _address_group: "{{ policy_creation_source_address_group }}"
       when:
-        - source_address_group is defined
+        - policy_creation_source_address_group is defined
 
     - name: ADDRESS GROUP PRESET - Deploy the Destination IP to policy based on the preset configuration
       ansible.builtin.include_tasks:
         file: preset/add_address_to_preset_group.yml
       vars:
-        _address: "{{ destination_ip }}"
-        _address_group: "{{ destination_address_group }}"
+        _address: "{{ policy_creation_destination_ip }}"
+        _address_group: "{{ policy_creation_destination_address_group }}"
       when:
-        - destination_address_group is defined
+        - policy_creation_destination_address_group is defined
 
     - name: APP GROUP PRESET - Deploy the application to policy based on the preset configuration
       ansible.builtin.include_tasks:
         file: preset/add_application_to_preset_group.yml
       when:
         - application_group is defined
-        - application is defined
+        - policy_creation_application is defined
 
     - name: URL CATEGORY  PRESET - Deploy the URL to the given category based on the preset configuration
       ansible.builtin.include_tasks:
@@ -60,8 +59,8 @@
       ansible.builtin.set_fact:
         policy_creation_config_changed: true
   when:
-    - policy_match is defined
-    - policy_match
+    - policy_creation_policy_match is defined
+    - policy_creation_policy_match
 
 # --- Custom Section ---
 # This section of tasks will attempt to create new security policies by caluclating as many values as possible
@@ -84,13 +83,13 @@
           ansible.builtin.set_fact:
             policy_creation_config_changed: true
       when:
-        - not matches_existing_policy
+        - not policy_creation_security_matches_existing_policy
 
   when:
-    - not policy_match
-    - source_ip is defined and source_ip != ""
-    - destination_ip is defined and destination_ip != ""
-    - application is defined and application != ""
+    - not policy_creation_policy_match
+    - policy_creation_source_ip is defined and policy_creation_source_ip != ""
+    - policy_creation_destination_ip is defined and policy_creation_destination_ip != ""
+    - policy_creation_application is defined and policy_creation_application != ""
 
 - name: Commit Block - Triggers on any change
   block:
@@ -106,7 +105,7 @@
       paloaltonetworks.panos.panos_commit_push:
         provider: "{{ provider }}"
         style: "device group"
-        name: "{{ device_group | default(default_new_policy_device_group) }}"
+        name: "{{ policy_creation_device_group | default(default_new_policy_device_group) }}"
         description: "Commit and push changes"
         admins:
           - "{{ provider.username }}"
@@ -120,8 +119,8 @@
 
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ matches_existing_policy }}"
+        msg: "{{ policy_creation_security_matches_existing_policy }}"
   when:
     - policy_creation_config_changed
-    - source_ip is defined
-    - destination_ip is defined
+    - policy_creation_source_ip is defined
+    - policy_creation_destination_ip is defined

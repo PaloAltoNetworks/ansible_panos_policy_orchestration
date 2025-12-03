@@ -13,8 +13,8 @@ Creates a new security policy with auto-generated address objects and rule place
 
 | Variable | Description |
 |----------|-------------|
-| `source_ip` | Source IP address or CIDR block |
-| `destination_ip` | Destination IP address or CIDR block |
+| `policy_creation_source_ip` | Source IP address or CIDR block |
+| `policy_creation_destination_ip` | Destination IP address or CIDR block |
 | `application` | Application name for the rule |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
 

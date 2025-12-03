@@ -33,7 +33,7 @@ jobs:
 
       - name: Ansible lint
         run: |
-          ansible-lint ../ansible_panos_policy_orchestration/
+          ansible-lint ../ansible_panos_policy_orchestration/ --offline
 
   python-tests:
     runs-on: ubuntu-latest

@@ -4,9 +4,9 @@
 
 - name: Set the routing table result list
   ansible.builtin.set_fact:
-    _show_route: []
+    policy_creation__show_route: []
   when:
-    - _show_route is not defined
+    - policy_creation__show_route is not defined
 
 - name: Get the ROUTING TABLE
   block:
@@ -18,7 +18,7 @@
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
         cmd: "show routing route"
-      register: _show_route_result
+      register: policy_creation__show_route_result
   rescue:
     - name: Get the ROUTING TABLE for each device
       paloaltonetworks.panos.panos_op:
@@ -28,16 +28,16 @@
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
         cmd: "show advanced-routing route"
-      register: _show_route_result
+      register: policy_creation__show_route_result
 
 - name: Parse as JSON
   ansible.builtin.set_fact:
-    _show_route_result_dict: "{{ _show_route_result.stdout | from_json }}"
+    policy_creation__show_route_result_dict: "{{ policy_creation__show_route_result.stdout | from_json }}"
 
 - name: Set list of virtual routers
   ansible.builtin.set_fact:
-    _virtual_routers: "{{ _virtual_routers | d([]) + [route['virtual-router']] }}"
-  loop: "{{ _show_route_result_dict.response.result.entry }}"
+    policy_creation__virtual_routers: "{{ policy_creation__virtual_routers | d([]) + [route['virtual-router']] }}"
+  loop: "{{ policy_creation__show_route_result_dict.response.result.entry }}"
   loop_control:
     loop_var: route
 
@@ -50,14 +50,16 @@
       serial_number: "{{ item.serial }}"
     cmd: "<test><routing><fib-lookup><virtual-router>{{ vr }}</virtual-router><ip>{{ _target_ip }}</ip></fib-lookup></routing></test>"
     cmd_is_xml: true
-  register: _test_routing_result
-  loop: "{{ _virtual_routers | unique }}"
+  register: policy_creation__test_routing_result
+  loop: "{{ policy_creation__virtual_routers | unique }}"
   loop_control:
     loop_var: vr
 
 - name: Get interfaces from results
   ansible.builtin.set_fact:
-    _interface_list: "{{ _test_routing_result.results | paloaltonetworks.panos_policy_automation.panos_op_routing_result_to_interfaces }}"
+    policy_creation_interface_list: >
+      {{ policy_creation__test_routing_result.results |
+         paloaltonetworks.panos_policy_automation.panos_op_routing_result_to_interfaces }}
 
 - name: Get the zone
   paloaltonetworks.panos.panos_op:
@@ -67,12 +69,12 @@
       password: "{{ provider.password }}"
       serial_number: "{{ item.serial }}"
     cmd: "show interface all"
-  register: _show_interfaces_result
+  register: policy_creation__show_interfaces_result
 
 - name: Set the ZONE list
   ansible.builtin.set_fact:
-    destination_zones: >
+    policy_creation_destination_zones: >
       {{
-        destination_zones | default([]) + _show_interfaces_result
-        | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(_interface_list) | default([])
+        policy_creation_destination_zones | default([]) + policy_creation__show_interfaces_result
+        | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(policy_creation_interface_list) | default([])
       }}"

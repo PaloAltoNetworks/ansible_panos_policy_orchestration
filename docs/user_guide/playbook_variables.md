@@ -4,10 +4,10 @@
 
 ### Required Variables
 
-**`source_ip`** - Source IP address or CIDR block for the policy
+**`policy_creation_source_ip`** - Source IP address or CIDR block for the policy
 - Example: `192.168.1.10` or `10.10.10.0/24`
 
-**`destination_ip`** - Destination IP address or CIDR block for the policy
+**`policy_creation_destination_ip`** - Destination IP address or CIDR block for the policy
 - Example: `8.8.8.8` or `203.0.113.0/24`
 
 **`provider`** - PAN-OS connection details
@@ -21,11 +21,11 @@
 - Default: `ssl`
 - Example: `ssh`, `dns`, `web-browsing`
 
-**`destination_port`** - Destination port number
+**`policy_creation_destination_port`** - Destination port number
 - Default: `443`
 - Example: `22`, `53`, `80`
 
-**`protocol`** - IP protocol number
+**`policy_creation_protocol`** - IP protocol number
 - Default: `6` (TCP)
 - Example: `17` (UDP), `1` (ICMP)
 
@@ -41,10 +41,10 @@
 
 ## Preset Policy Variables
 
-**`source_address_group`** - Existing address group to add source IP to
+**`policy_creation_source_address_group`** - Existing address group to add source IP to
 - Used for preset policy configurations
 
-**`destination_address_group`** - Existing address group to add destination IP to
+**`policy_creation_destination_address_group`** - Existing address group to add destination IP to
 - Used for preset policy configurations
 
 **`application_group`** - Existing application group to add application to

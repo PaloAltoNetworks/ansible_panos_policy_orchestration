@@ -3,12 +3,12 @@
 
 - name: Set Test XML
   ansible.builtin.set_fact:
-    test_xml: |
+    policy_creation_test_xml: |
       <test>
         <security-policy-match>
-          <source>{{ source_ip }}</source>
-          <destination>{{ destination_ip }}</destination>
-          <application>{{ application | default('ssl') }}</application>
+          <source>{{ policy_creation_sourcce_ip }}</source>
+          <destination>{{ policy_creation_destination_ip }}</destination>
+          <application>{{ policy_creation_application | default('ssl') }}</application>
           <protocol>6</protocol>
           <destination-port>443</destination-port>
         </security-policy-match>
@@ -16,7 +16,7 @@
 
 - name: Print the test parameters
   ansible.builtin.debug:
-    msg: "{{ test_xml }}"
+    msg: "{{ policy_creation_test_xml }}"
 
 - name: Test the Current Security policy
   block:
@@ -27,9 +27,9 @@
           username: "{{ provider.username }}"
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
-        cmd: "{{ test_xml }}"
+        cmd: "{{ policy_creation_test_xml }}"
         cmd_is_xml: true
-      register: security_policy_match_result
+      register: policy_creation_security_policy_match_result
   rescue:
     - name: Test the current status of the security policy using PLACEHOLDERS
       paloaltonetworks.panos.panos_op:
@@ -38,14 +38,16 @@
           username: "{{ provider.username }}"
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
-        cmd: "{{ test_xml }}"
+        cmd: "{{ policy_creation_test_xml }}"
         cmd_is_xml: true
-      register: security_policy_match_result
+      register: policy_creation_security_policy_match_result
 
 - name: Print the result
   ansible.builtin.debug:
-    msg: "{{ security_policy_match_result }}"
+    msg: "{{ policy_creation_security_policy_match_result }}"
 
 - name: Set the policy match result
   ansible.builtin.set_fact:
-    matches_existing_policy: "{{ security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}"
+    policy_creation_security_matches_existing_policy: >
+      {{ policy_creation_security_policy_match_result |
+         paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}
