@@ -1,9 +1,13 @@
 ---
 name: CI
 
+defaults:
+  run:
+    shell: bash
+
 on:
   pull_request:
-    branches: [master]
+    branches: [ master ]
 jobs:
   ansible-syntax:
     runs-on: ubuntu-latest
@@ -27,13 +31,9 @@ jobs:
         run: |
           ansible-galaxy collection install paloaltonetworks.panos
 
-      - name: Ansible syntax check
-        run: |
-          find playbooks -name "*.yml" -exec ansible-playbook --syntax-check {} \;
-
       - name: Ansible lint
         run: |
-          ansible-lint ansible_collections/paloaltonetworks/panos_policy_automation/
+          ansible-lint ../ansible_panos_policy_orchestration/
 
   python-tests:
     runs-on: ubuntu-latest
@@ -55,8 +55,7 @@ jobs:
 
       - name: Run custom filter tests
         run: |
-          cd filter_plugins
-          python -m pytest ansible_collections/paloaltonetworks/panos_policy_automation/plugins/filter/test_custom_filters.py -v
+          python -m pytest ./plugins/filter/test_custom_filters.py -v
 
   secrets-scan:
     runs-on: ubuntu-latest

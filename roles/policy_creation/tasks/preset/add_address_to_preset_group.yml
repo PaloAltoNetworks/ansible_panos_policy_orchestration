@@ -36,7 +36,7 @@
   when: created_object_name not in existing_group.gathered.static_value
 
 - name: Display results
-  debug:
+  ansible.builtin.debug:
     msg: |-
       Address object: {{ created_object_name }}
       Added to group: {{ _address_group }}

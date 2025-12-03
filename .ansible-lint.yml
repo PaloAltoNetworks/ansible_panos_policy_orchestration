@@ -6,3 +6,7 @@ profile: production
 skip_list:
   - key-order
   - var-naming[non-string]
+
+exclude_paths:
+  - mkdocs.yml
+  - .github

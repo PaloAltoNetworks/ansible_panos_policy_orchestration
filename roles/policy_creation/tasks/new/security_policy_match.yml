@@ -2,7 +2,7 @@
 # Runs test security-policy-match based on the given parameters
 
 - name: Set Test XML
-  set_fact:
+  ansible.builtin.set_fact:
     test_xml: |
       <test>
         <security-policy-match>
@@ -15,7 +15,7 @@
       </test>
 
 - name: Print the test parameters
-  debug:
+  ansible.builtin.debug:
     msg: "{{ test_xml }}"
 
 - name: Test the Current Security policy
@@ -43,9 +43,9 @@
       register: security_policy_match_result
 
 - name: Print the result
-  debug:
+  ansible.builtin.debug:
     msg: "{{ security_policy_match_result }}"
 
 - name: Set the policy match result
-  set_fact:
+  ansible.builtin.set_fact:
     matches_existing_policy: "{{ security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}"

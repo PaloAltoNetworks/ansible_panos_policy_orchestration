@@ -71,4 +71,8 @@
 
 - name: Set the ZONE list
   ansible.builtin.set_fact:
-    destination_zones: "{{ destination_zones | default([]) + _show_interfaces_result | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(_interface_list) | default([]) }}"
+    destination_zones: >
+      {{
+        destination_zones | default([]) + _show_interfaces_result
+        | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(_interface_list) | default([])
+      }}"

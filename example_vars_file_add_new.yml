@@ -2,3 +2,5 @@
 source_ip: 110.33.122.75
 destination_ip: 10.10.10.5
 application: ssh
+policy_files:
+  - example_outbound_policy_file.yml

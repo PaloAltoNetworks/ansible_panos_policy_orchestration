@@ -20,7 +20,7 @@
   register: group_addition
 
 - name: Display results
-  debug:
+  ansible.builtin.debug:
     msg: |-
       App object: {{ application }}
       Added to group: {{ application_group }}

@@ -32,7 +32,7 @@ Main orchestrator tasks file that coordinates the entire security policy workflo
 
 | Variable | Description |
 |----------|-------------|
-| `config_changed` | Boolean indicating if configuration was modified |
+| `policy_creation_config_changed` | Boolean indicating if configuration was modified |
 | `policy_match` | Boolean indicating if traffic matched a preset policy |
 | `matches_existing_policy` | Boolean from policy testing results |
 

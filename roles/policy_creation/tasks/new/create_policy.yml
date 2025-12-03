@@ -2,7 +2,7 @@
 # Creates a new policy based on the information we have gathered up to this point.
 
 - name: Populate Defaults
-  set_fact:
+  ansible.builtin.set_fact:
     source_zones: "{{ source_zones | default(['any']) }}"
     destination_zones: "{{ destination_zones | default(['any']) }}"
     tag: "{{ tag | default(default_new_policy_tag) }}"
@@ -75,6 +75,6 @@
   when: default_location_rule_name is not defined
 
 - name: Update facts
-  set_fact:
+  ansible.builtin.set_fact:
     policy_created: "{{ rule_name }}"
-    config_changed: true
+    policy_creation_config_changed: true

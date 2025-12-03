@@ -30,5 +30,6 @@ argument_specs:
         description: "The PAN-OS compatible Application for the policy."
       destination_port:
         type: "str"
-        required: true
+        required: false
+        default: "443"
         description: "The TCP or UDP port used by the traffic in the policy"
