@@ -35,6 +35,13 @@ jobs:
           npm install -g @semantic-release/commit-analyzer
           npm install -g @semantic-release/release-notes-generator
 
+      - name: Install Ansible (and ansible Galaxy)
+        run: |
+           apt update
+           apt install software-properties-common
+           add-apt-repository --yes --update ppa:ansible/ansible
+           apt install ansible
+
       - name: Get the next version
         run: |
           echo "NEXT_VERSION=`semantic-release --no-ci --dry-run | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'`" >> "$GITHUB_OUTPUT"
@@ -43,6 +50,17 @@ jobs:
       - name: Update Ansible Galaxy file with the next version
         run: |
           sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' ansible_collections/paloaltonetworks/panos_policy_automation/galaxy.yml
+    
+      - name: Commit and push galaxy changes
+        run: |
+          git config --global user.name 'Github Actions Release Pipeline'
+          git config --global user.email 'githubactions@users.noreply.github.com'
+          git commit -am "chore: Update Ansible Galaxy file [skip ci]"
+          git push
+
+      - name: Build the ansible galaxy collection (verifies that everything works)
+        run: |
+           ansible-galaxy collection build
 
 # Temp disable: don't do actual release yet
 #      - name: Run semantic-release
