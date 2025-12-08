@@ -59,8 +59,21 @@ jobs:
           git push
 
       - name: Build the ansible galaxy collection (verifies that everything works)
+        id: build_tarball
         run: |
            ansible-galaxy collection build
+           echo "TARBALL=`ls | grep panos_policy_automation`" >> "$GITHUB_OUTPUT"
+
+      - name: Print the built collection tarball
+        run: |
+          echo "${{ steps.build_tarball.outputs.TARBALL }}
+
+# Temp disable: don't do actual publish yet
+      #- name: Publish the collection
+      #  env:
+      #    ANSIBLE_GALAXY_TOKEN: ${{ secrets.SuperSecret }}
+      #  run: |
+      #    ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
 
 # Temp disable: don't do actual release yet
 #      - name: Run semantic-release
