@@ -50,6 +50,8 @@ jobs:
         run: |
           echo "NEXT_VERSION=`semantic-release --no-ci --dry-run | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'`" >> "$GITHUB_OUTPUT"
         id: get_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update Ansible Galaxy file with the next version
         run: |
@@ -70,7 +72,7 @@ jobs:
 
       - name: Print the built collection tarball
         run: |
-          echo "${{ steps.build_tarball.outputs.TARBALL }}
+          echo "${{ steps.build_tarball.outputs.TARBALL }}"
 
       - name: Publish the collection
         env:
