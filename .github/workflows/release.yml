@@ -3,7 +3,8 @@ name: Release
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 permissions:
   contents: write
   issues: write
@@ -35,12 +36,15 @@ jobs:
           npm install -g @semantic-release/commit-analyzer
           npm install -g @semantic-release/release-notes-generator
 
-      - name: Install Ansible (and ansible Galaxy)
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible
         run: |
-           apt update
-           apt install software-properties-common
-           add-apt-repository --yes --update ppa:ansible/ansible
-           apt install ansible
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
 
       - name: Get the next version
         run: |
@@ -49,7 +53,7 @@ jobs:
 
       - name: Update Ansible Galaxy file with the next version
         run: |
-          sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' ansible_collections/paloaltonetworks/panos_policy_automation/galaxy.yml
+          sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' galaxy.yml
     
       - name: Commit and push galaxy changes
         run: |
@@ -68,16 +72,13 @@ jobs:
         run: |
           echo "${{ steps.build_tarball.outputs.TARBALL }}
 
-# Temp disable: don't do actual publish yet
-      #- name: Publish the collection
-      #  env:
-      #    ANSIBLE_GALAXY_TOKEN: ${{ secrets.SuperSecret }}
-      #  run: |
-      #    ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
+      - name: Publish the collection
+        env:
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.$ANSIBLE_GALAXY_TOKEN }}
+        run: |
+          ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
 
-# Temp disable: don't do actual release yet
-#      - name: Run semantic-release
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#        run: semantic-release
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release
