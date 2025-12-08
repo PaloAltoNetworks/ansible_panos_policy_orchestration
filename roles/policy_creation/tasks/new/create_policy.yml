@@ -1,0 +1,80 @@
+---
+# Creates a new policy based on the information we have gathered up to this point.
+
+- name: Populate Defaults
+  ansible.builtin.set_fact:
+    policy_creation_source_zones: "{{ policy_creation_source_zones | default(['any']) }}"
+    policy_creation_destination_zones: "{{ policy_creation_destination_zones | default(['any']) }}"
+    policy_creation_tag: "{{ policy_creation_tag | default(default_new_policy_tag) }}"
+    policy_creation_rule_name: "autogen_{{ ansible_date_time.epoch }}"
+    policy_creation_source_address_name: "addr_{{ policy_creation_source_ip | replace('.', '_') | replace('/', '_') }}"
+    policy_creation_destination_address_name: "addr_{{ policy_creation_destination_ip | replace('.', '_') | replace('/', '_') }}"
+    policy_creation_device_group: "{{ policy_creation_device_group | default(default_new_policy_device_group) }}"
+
+- name: Create the TAG if required
+  paloaltonetworks.panos.panos_tag_object:
+    provider:
+      ip_address: "{{ provider.ip_address }}"
+      username: "{{ provider.username }}"
+      password: "{{ provider.password }}"
+    name: "{{ policy_creation_tag }}"
+    color: "black"
+    device_group: shared
+
+- name: Create ADDRESS object for source IP
+  paloaltonetworks.panos.panos_address_object:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    name: "{{ policy_creation_source_address_name }}"
+    value: "{{ policy_creation_source_ip }}"
+    address_type: "ip-netmask"
+    description: "Auto-created address object"
+    state: present
+
+- name: Create ADDRESS object for destination IP
+  paloaltonetworks.panos.panos_address_object:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    name: "{{ policy_creation_destination_address_name }}"
+    value: "{{ policy_creation_destination_ip }}"
+    address_type: "ip-netmask"
+    description: "Auto-created address object"
+    state: present
+
+- name: Create the SECURITY RULE positional
+  paloaltonetworks.panos.panos_security_rule:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    rule_name: "{{ policy_creation_rule_name }}"
+    description: "Created by automation at  {{ ansible_date_time.epoch }}"
+    tag_name: ["{{ policy_creation_tag }}"]
+    source_zone: "{{ policy_creation_source_zones }}"
+    source_ip: ["{{ policy_creation_source_ip }}"]
+    destination_zone: "{{ policy_creation_destination_zones }}"
+    destination_ip: ["{{ policy_creation_destination_ip }}"]
+    application: ["{{ policy_creation_application }}"]
+    action: "allow"
+    location: "{{ default_rule_location }}"
+    existing_rule: "{{ default_location_rule_name | default('') }}"
+  when: default_location_rule_name is defined
+
+- name: Create the SECURITY RULE default
+  paloaltonetworks.panos.panos_security_rule:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    rule_name: "{{ policy_creation_rule_name }}"
+    description: "Created by automation at  {{ ansible_date_time.epoch }}"
+    tag_name: ["{{ policy_creation_tag }}"]
+    source_zone: "{{ policy_creation_source_zones }}"
+    source_ip: ["{{ policy_creation_source_ip }}"]
+    destination_zone: "{{ policy_creation_destination_zones }}"
+    destination_ip: ["{{ policy_creation_destination_ip }}"]
+    application: ["{{ policy_creation_application }}"]
+    action: "allow"
+    location: "{{ default_rule_location }}"
+  when: default_location_rule_name is not defined
+
+- name: Update facts
+  ansible.builtin.set_fact:
+    policy_creation_policy_created: "{{ policy_creation_rule_name }}"
+    policy_creation_config_changed: true

@@ -13,8 +13,8 @@ Creates a new security policy with auto-generated address objects and rule place
 
 | Variable | Description |
 |----------|-------------|
-| `source_ip` | Source IP address or CIDR block |
-| `destination_ip` | Destination IP address or CIDR block |
+| `policy_creation_source_ip` | Source IP address or CIDR block |
+| `policy_creation_destination_ip` | Destination IP address or CIDR block |
 | `application` | Application name for the rule |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
 
@@ -37,7 +37,7 @@ Creates a new security policy with auto-generated address objects and rule place
 | `source_address_name` | Auto-generated as `addr_<source_ip_sanitized>` |
 | `destination_address_name` | Auto-generated as `addr_<destination_ip_sanitized>` |
 | `policy_created` | Set to the created rule name |
-| `config_changed` | Set to `true` |
+| `policy_creation_config_changed` | Set to `true` |
 
 ## Dependencies
 - Requires PAN-OS collection

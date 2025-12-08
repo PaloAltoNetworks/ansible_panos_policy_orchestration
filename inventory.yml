@@ -29,7 +29,7 @@ all:
 
     prod:
       hosts:
-        # Production devices will be added here
+      # Production devices will be added here
       vars:
         # Common variables for production environment
         ansible_connection: local

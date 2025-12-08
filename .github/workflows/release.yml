@@ -1,43 +1,84 @@
+---
 name: Release
 
 on:
   push:
-    branches: [ master ]
-
+    branches:
+      - master
 permissions:
   contents: write
   issues: write
   pull-requests: write
 
-jobs:    
+jobs:
   release:
     runs-on: ubuntu-latest
     name: Create Release
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
-      with:
-        fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Node.js
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-      with:
-        node-version: '18'
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "18"
 
-    - name: Install semantic-release
-      run: |
-        npm install -g semantic-release
-        npm install -g @semantic-release/changelog
-        npm install -g @semantic-release/git
-        npm install -g @semantic-release/github
-        npm install -g @semantic-release/commit-analyzer
-        npm install -g @semantic-release/release-notes-generator
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release
+          npm install -g @semantic-release/changelog
+          npm install -g @semantic-release/git
+          npm install -g @semantic-release/github
+          npm install -g @semantic-release/commit-analyzer
+          npm install -g @semantic-release/release-notes-generator
 
-    - name: Run semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: "3.11"
 
-      run: semantic-release
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
 
+      - name: Get the next version
+        run: |
+          echo "NEXT_VERSION=`semantic-release --no-ci --dry-run | grep -oP 'The next release version is \K[0-9]+\.[0-9]+\.[0-9]+'`" >> "$GITHUB_OUTPUT"
+        id: get_version
+
+      - name: Update Ansible Galaxy file with the next version
+        run: |
+          sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' galaxy.yml
+    
+      - name: Commit and push galaxy changes
+        run: |
+          git config --global user.name 'Github Actions Release Pipeline'
+          git config --global user.email 'githubactions@users.noreply.github.com'
+          git commit -am "chore: Update Ansible Galaxy file [skip ci]"
+          git push
+
+      - name: Build the ansible galaxy collection (verifies that everything works)
+        id: build_tarball
+        run: |
+           ansible-galaxy collection build
+           echo "TARBALL=`ls | grep panos_policy_automation`" >> "$GITHUB_OUTPUT"
+
+      - name: Print the built collection tarball
+        run: |
+          echo "${{ steps.build_tarball.outputs.TARBALL }}
+
+      - name: Publish the collection
+        env:
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
+        run: |
+          ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release

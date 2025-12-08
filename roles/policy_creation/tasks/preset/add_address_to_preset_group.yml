@@ -1,0 +1,44 @@
+---
+# Tasks file which creates a single address as an address object in the given device group, identified by the variables
+# {{ policy_creation_device_group }} and {{ _address_group }}
+
+- name: Determine the object name
+  ansible.builtin.set_fact:
+    policy_creation_created_object_name: "addr_{{ _address | replace('.', '_') | replace('/', '_') }}"
+
+- name: Create ADDRESS object
+  paloaltonetworks.panos.panos_address_object:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    name: "{{ policy_creation_created_object_name }}"
+    value: "{{ _address }}"
+    address_type: "ip-netmask"
+    description: "Auto-created address object for {{ _address }}"
+    state: present
+  register: policy_creation_address_creation
+
+- name: Get existing objects
+  paloaltonetworks.panos.panos_address_group:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    name: "{{ _address_group }}"
+    state: gathered
+  register: policy_creation_existing_group
+
+- name: Add ADDRESS object to preset ADDRESS GROUP
+  paloaltonetworks.panos.panos_address_group:
+    provider: "{{ provider }}"
+    device_group: "{{ policy_creation_device_group }}"
+    name: "{{ _address_group }}"
+    static_value: "{{ [policy_creation_created_object_name] + policy_creation_existing_group.gathered.static_value }}"
+    state: present
+  register: policy_creation_group_addition
+  when: policy_creation_created_object_name not in policy_creation_existing_group.gathered.static_value
+
+- name: Display results
+  ansible.builtin.debug:
+    msg: |-
+      Address object: {{ policy_creation_created_object_name }}
+      Added to group: {{ _address_group }}
+      Device group: {{ policy_creation_device_group }}
+      Status: {{ 'SUCCESS' if policy_creation_group_addition is succeeded else 'FAILED' }}

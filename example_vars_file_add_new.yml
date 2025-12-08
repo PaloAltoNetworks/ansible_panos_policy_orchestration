@@ -1,3 +1,6 @@
-source_ip: 110.33.122.75
-destination_ip: 10.10.10.5
-application: ssh
+---
+policy_creation_source_ip: 110.33.122.75
+policy_creation_destination_ip: 10.10.10.5
+policy_creation_application: ssh
+policy_creation_policy_files:
+  - example_outbound_policy_file.yml

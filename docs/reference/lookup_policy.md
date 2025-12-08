@@ -14,16 +14,16 @@ Tests existing security policies to determine if traffic is already permitted an
 
 | Variable | Description |
 |----------|-------------|
-| `source_ip` | Source IP address for policy testing |
-| `destination_ip` | Destination IP address for policy testing |
+| `policy_creation_source_ip` | Source IP address for policy testing |
+| `policy_creation_destination_ip` | Destination IP address for policy testing |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
 
 ## Optional Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `destination_port` | Destination port for testing | `443` |
-| `protocol` | IP protocol number | `6` (TCP) |
+| `policy_creation_destination_port` | Destination port for testing | `443` |
+| `policy_creation_protocol` | IP protocol number | `6` (TCP) |
 | `application` | Application for testing | `ssl` |
 | `device_group` | Target device group | N/A |
 | `default_new_policy_device_group` | Fallback device group | N/A |
@@ -33,7 +33,7 @@ Tests existing security policies to determine if traffic is already permitted an
 
 | Variable | Description |
 |----------|-------------|
-| `matches_existing_policy` | Boolean indicating if traffic is already permitted |
+| `policy_creation_security_matches_existing_policy` | Boolean indicating if traffic is already permitted |
 | `destination_zones` | List of calculated destination zones |
 
 ## Dependencies

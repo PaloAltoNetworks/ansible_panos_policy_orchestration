@@ -1,3 +1,4 @@
+---
 site_name: Palo Alto Networks Policy Orchestration with Ansible
 markdown_extensions:
   - pymdownx.highlight:
@@ -8,8 +9,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!%20python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!%20python/name:material.extensions.emoji.to_svg
   - pymdownx.tabbed:
       alternate_style: true
   - toc:
@@ -18,7 +19,6 @@ markdown_extensions:
   - pymdownx.details
   - attr_list
   - md_in_html
-
 
 plugins:
   - mkdocstrings

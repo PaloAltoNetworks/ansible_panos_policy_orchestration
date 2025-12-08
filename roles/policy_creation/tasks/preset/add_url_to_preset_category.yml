@@ -4,18 +4,18 @@
 - name: Get existing URL CATEGORY objects
   paloaltonetworks.panos.panos_custom_url_category:
     provider: "{{ provider }}"
-    device_group: "{{ device_group }}"
+    device_group: "{{ policy_creation_device_group }}"
     name: "{{ destination_url_category }}"
     state: gathered
-  register: existing_group
+  register: policy_creation_existing_group
 
 - name: Add URL to preset URL LIST
   paloaltonetworks.panos.panos_custom_url_category:
     provider: "{{ provider }}"
-    device_group: "{{ device_group }}"
+    device_group: "{{ policy_creation_device_group }}"
     name: "{{ destination_url_category }}"
-    url_value: "{{ [url] + existing_group.gathered.url_value }}"
+    url_value: "{{ [url] + policy_creation_existing_group.gathered.url_value }}"
     state: present
-  register: group_addition
+  register: policy_creation_group_addition
   when:
-    - existing_group.gathered.type == 'URL List'
+    - policy_creation_existing_group.gathered.type == 'URL List'

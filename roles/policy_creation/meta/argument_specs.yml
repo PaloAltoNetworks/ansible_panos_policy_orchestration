@@ -1,0 +1,36 @@
+---
+argument_specs:
+  main:
+    short_description: Configure new network access in Palo Alto Networks Panorama
+    description:
+      - >-
+        The main entry point that includes all tasks.
+    options:
+      policy_creation_policy_files:
+        type: "list"
+        elements: "str"
+        required: true
+        description: "A list of policy files compatible with this role."
+        version_added: 1.0.0
+      source_user:
+        type: "str"
+        required: false
+        description: "The source user for the new policy"
+      policy_creation_source_ip:
+        type: "str"
+        required: false
+        description: "The the source IP for the new policy"
+      policy_creation_destination_ip:
+        type: "str"
+        required: false
+        description: "The the destination IP for the new policy"
+      policy_creation_application:
+        type: "str"
+        required: false
+        default: ssl
+        description: "The PAN-OS compatible Application for the policy."
+      policy_creation_destination_port:
+        type: "str"
+        required: false
+        default: "443"
+        description: "The TCP or UDP port used by the traffic in the policy"

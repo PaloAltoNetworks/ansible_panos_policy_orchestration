@@ -98,21 +98,21 @@ directory, but you can put it whever makes sense for your environment.
 - name: Match SSH Jumpserver access
   ansible.builtin.set_fact:
     policy_match: true # Set the fact that we did match a policy
-    source_address_group: PRESET_JUMPHOST_INBOUND_SOURCE # In this case, the policy preset is an address_group type
-    destination_address_group: PRESET_JUMPHOST_INBOUND_DESTINATION # In this case, the policy preset is an address_group type
+    policy_creation_source_address_group: PRESET_JUMPHOST_INBOUND_SOURCE # In this case, the policy preset is an address_group type
+    policy_creation_destination_address_group: PRESET_JUMPHOST_INBOUND_DESTINATION # In this case, the policy preset is an address_group type
     application_group: PRESET_JUMPHOST_APPS # If an application is passed, we should also include it in the policy.
     device_group: Lab # Finally, we set the device group!
   when:
-    - source_ip is defined
-    - destination_ip is defined
-    - "'10.10.11.0/24' | ansible.utils.network_in_network( destination_ip )"
-    - "not '10.0.0.0/8' | ansible.utils.network_in_network( source_ip )"
+    - policy_creation_source_ip is defined
+    - policy_creation_destination_ip is defined
+    - "'10.10.11.0/24' | ansible.utils.network_in_network( policy_creation_destination_ip )"
+    - "not '10.0.0.0/8' | ansible.utils.network_in_network( policy_creation_source_ip )"
 
 ```
 
 ### Including the policy
 
-Now we **include** our new policy it as part of the [add_policy.yml](../../playbooks/orchestrator/add_policy.yml) playbook. 
+Now we **include** our new policy it as part of the [add_policy.yml](../../ansible_collections/playbooks/orchestrator/add_policy.yml) playbook. 
 
 
 ```yaml title="add_policy.yml"

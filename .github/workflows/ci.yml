@@ -1,70 +1,69 @@
+---
 name: CI
+
+defaults:
+  run:
+    shell: bash
 
 on:
   pull_request:
     branches: [ master ]
-
 jobs:
   ansible-syntax:
     runs-on: ubuntu-latest
     name: Ansible Syntax Check
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
-    - name: Set up Python
-      uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Ansible
-      run: |
-        python -m pip install --upgrade pip
-        pip install ansible ansible-lint
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
 
-    - name: Install PAN-OS collection
-      run: |
-        ansible-galaxy collection install paloaltonetworks.panos
+      - name: Install PAN-OS collection
+        run: |
+          ansible-galaxy collection install paloaltonetworks.panos
 
-    - name: Ansible syntax check
-      run: |
-        find playbooks -name "*.yml" -exec ansible-playbook --syntax-check {} \;
-
-    - name: Ansible lint
-      run: |
-        ansible-lint playbooks/
+      - name: Ansible lint
+        run: |
+          ansible-lint ../ansible_panos_policy_orchestration/ --offline
 
   python-tests:
     runs-on: ubuntu-latest
     name: Python Filter Tests
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
-    - name: Set up Python
-      uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
 
-    - name: Run custom filter tests
-      run: |
-        cd filter_plugins
-        python -m pytest test_custom_filters.py -v
+      - name: Run custom filter tests
+        run: |
+          python -m pytest ./plugins/filter/test_custom_filters.py -v
 
   secrets-scan:
     runs-on: ubuntu-latest
     name: Secrets Scanning
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
-      with:
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        with:
 
-        fetch-depth: 0
+          fetch-depth: 0
