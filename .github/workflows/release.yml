@@ -74,7 +74,7 @@ jobs:
 
       - name: Publish the collection
         env:
-          ANSIBLE_GALAXY_TOKEN: ${{ secrets.$ANSIBLE_GALAXY_TOKEN }}
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
         run: |
           ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
 
