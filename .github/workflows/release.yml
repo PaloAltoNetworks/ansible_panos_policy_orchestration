@@ -80,7 +80,7 @@ jobs:
         env:
           ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
         run: |
-          ansible-galaxy collection publish --token $ANSIBLE_GALAXY_TOKEN
+          ansible-galaxy collection publish --token $ANSIBLE_GALAXY_TOKEN ${{ steps.build_tarball.outputs.TARBALL }}
 
       - name: Run semantic-release
         env:
