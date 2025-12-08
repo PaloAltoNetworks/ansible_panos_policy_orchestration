@@ -78,7 +78,7 @@ jobs:
         env:
           ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
         run: |
-          ansible-galaxy collection publish -e $ANSIBLE_GALAXY_TOKEN
+          ansible-galaxy collection publish --token $ANSIBLE_GALAXY_TOKEN
 
       - name: Run semantic-release
         env:
