@@ -1,0 +1,10 @@
+---
+- hosts: lab
+  connection: local
+  gather_facts: false
+  name: Test the JIRA Example "issues to policy" behavior
+
+  tasks:
+    - name: Test lookup policy tasks
+      ansible.builtin.include_tasks:
+        file: ../jira_example/issues_to_policy.yml

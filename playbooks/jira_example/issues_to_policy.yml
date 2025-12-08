@@ -1,0 +1,42 @@
+---
+# These tasks enumerate issues from JIRA, actioning requests for firewall policy.
+# It's designed to be an example of how you could trigger this workflow from an ITSM without needing specific webhooks
+# or other sorts of access.
+
+# !!! NOTE !!!
+# The following code would *normally* be used to nicely enumerate all the issues.
+# However, it is bugged due to an issue with the `community.general.jira` integration, so it is disabled!
+
+#- name: JIRA - Get all new requests
+#  community.general.jira:
+#    uri: '{{ jira_server }}'
+#    token: "{{ jira_token }}"
+#    project: "{{ jira_issue_project }}"
+#    operation: search
+#    maxresults: 10
+#    jql: "{{ jira_issue_jql }}"
+#    validate_certs: "{{ jira_validate_certs | default(true) }}"
+#  args:
+#    fields:
+#      lastViewed:
+#  register: issue
+
+- name: JIRA - Get Specific request (if given)
+  community.general.jira:
+    uri: '{{ jira_server }}'
+    username: "{{ jira_username }}"
+    password: "{{ jira_token }}"
+    project: "{{ jira_issue_project }}"
+    operation: fetch
+    issue: "{{ jira_issue_id }}"
+    validate_certs: "{{ jira_validate_certs | default(true) }}"
+  args:
+    fields:
+      lastViewed:
+  register: issue
+  when:
+    - issue is not defined
+    - jira_issue_id is defined
+
+- debug:
+    msg: "{{ issue }}"
