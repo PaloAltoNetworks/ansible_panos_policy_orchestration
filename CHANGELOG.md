@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.2.1...v1.3.0) (2025-12-09)
+
+
+### Features
+
+* Refactor for Ansible submission ([#11](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/issues/11)) ([904a782](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/904a7828de2886db603e33c2f490627273467e6a))
+
 ## [1.2.1](https://github.com/adambaumeister/ansible_panos_policy_orchestration/compare/v1.2.0...v1.2.1) (2025-09-29)
 
 
