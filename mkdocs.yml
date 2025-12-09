@@ -48,12 +48,16 @@ nav:
       - New Policy Creation: user_guide/new_policy_creation.md
       - Testing Security Policies: user_guide/policy_lookup.md
   - Reference:
-      - Variables: reference/playbook_variables.md
-      - add_policy.yml Tasks: reference/add_policy.md
-      - create_policy.yml Tasks: reference/create_policy.md
-      - get_zone_by_ip.yml Tasks: reference/get_zone_by_ip.md
-      - lookup_policy.yml Tasks: reference/lookup_policy.md
-      - security_policy_match.yml Tasks: reference/security_policy_match.md
+      - policy_creation Role: reference/policy_creation_role.md
+      - New Policy Tasks:
+          - lookup_policy.yml: reference/lookup_policy.md
+          - security_policy_match.yml: reference/security_policy_match.md
+          - get_zone_by_ip.yml: reference/get_zone_by_ip.md
+          - create_policy.yml: reference/create_policy.md
+      - Preset Policy Tasks:
+          - add_address_to_preset_group.yml: reference/add_address_to_preset_group.md
+          - add_application_to_preset_group.yml: reference/add_application_to_preset_group.md
+          - add_url_to_preset_category.yml: reference/add_url_to_preset_category.md
   - Changelog: CHANGELOG.md
 
 extra:
