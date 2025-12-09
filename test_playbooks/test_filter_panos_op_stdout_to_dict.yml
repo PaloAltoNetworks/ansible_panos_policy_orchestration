@@ -1,0 +1,29 @@
+---
+- hosts: lab # <---- Replace this with your group
+  connection: local
+  gather_facts: true # <--- Requied for getting the current time
+  name: Tests the panos_op_routing_result_to_interfaces filter is working properly
+
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'PAN_USERNAME') }}"
+      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+    serialno: "{{ lookup('env', 'PAN_TEST_SERIAL') }}"
+
+  tasks:
+    # Check if security policy match found a result
+    - name: Get all connected devices
+      paloaltonetworks.panos.panos_op:
+        provider: "{{ provider }}"
+        cmd: "show devices connected"
+      register: policy_creation__show_devices_output
+
+    - name: Set JSON Object for stdout
+      ansible.builtin.set_fact:
+        policy_creation__show_devices_output_dict: >
+          {{ policy_creation__show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}
+
+    - name: Print results
+      ansible.builtin.debug:
+        msg: "{{ policy_creation__show_devices_output_dict }}"
