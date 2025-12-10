@@ -21,7 +21,7 @@ In these cases, the firewall administrator is not making a security policy decis
 
 With these high level policies in mind, you must convert them into actionable "filters"
 
-## Building a Sanctioned Policy
+## Building a Sanctioned Policy File
 
 !!! note
     This project intentionally does not abstract how the implementation works so that it is easy to customize. This
@@ -88,8 +88,8 @@ We use Ansible tasks and Jinja2 filters to map the policy to automation actions.
 with a `when` clause. You can make this as complex as you like, Jinja2 offers a huge amount of filters out of the box,
 and if you need to get more complex you can write your own custom python filters.
 
-To implement our jump server access, we write a tasks file. For simplicity, you can store this in the `playbooks/orchestrator/preset`
-directory, but you can put it whever makes sense for your environment.
+To implement our jump server access, we write a tasks file. You can store this anywhere, as it is included dynamically
+at runtime.
 
 ```yaml title="ssh_jumpserver_inbound_access.yml"
 ---
@@ -100,8 +100,8 @@ directory, but you can put it whever makes sense for your environment.
     policy_match: true # Set the fact that we did match a policy
     policy_creation_source_address_group: PRESET_JUMPHOST_INBOUND_SOURCE # In this case, the policy preset is an address_group type
     policy_creation_destination_address_group: PRESET_JUMPHOST_INBOUND_DESTINATION # In this case, the policy preset is an address_group type
-    application_group: PRESET_JUMPHOST_APPS # If an application is passed, we should also include it in the policy.
-    device_group: Lab # Finally, we set the device group!
+    policy_creation_application_group: PRESET_JUMPHOST_APPS # If an application is passed, we should also include it in the policy.
+    policy_creation_device_group: Lab # Finally, we set the device group!
   when:
     - policy_creation_source_ip is defined
     - policy_creation_destination_ip is defined
@@ -112,39 +112,43 @@ directory, but you can put it whever makes sense for your environment.
 
 ### Including the policy
 
-Now we **include** our new policy it as part of the [add_policy.yml](../../ansible_collections/playbooks/orchestrator/add_policy.yml) playbook. 
+We include and utilize our policy by passing the path via the `policy_creation_policy_files` variable.
 
+Note that you can include multiple files, and they will be parsed sequentially, or you can have all your policy 
+in the one file - it's up to you!
 
-```yaml title="add_policy.yml"
-# --- START PRESET POLICY SECTION ---
-# This section of tasks automatically updates existing, pre-built policies by simply updating existing address-groups
-# and given applications to the given application groups.
-# This allows for maximum control over the brownfield policy, but will only catch certain use cases.
+## Creating and running a playbook
 
-# WEBSERVERS EXAMPLE
-- name: Test against Webserver outbound policy
-  ansible.builtin.include_tasks:
-    file: preset/webservers_outbound_policy.yml
+```yaml title="example_playbook.yml"
+---
+- hosts: lab # <---- Replace this with your group for Panorama
+  connection: local
+  gather_facts: false
+  name: Deploy security policy
 
-# SSH Jump Server Policy
-- name: Test against SSH Jumpserver inbound policy
-  ansible.builtin.include_tasks:
-    file: preset/ssh_jumpserver_inbound_access.yml
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'PAN_USERNAME') }}"
+      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+    policy_creation_source_ip: 8.8.8.8
+    policy_creation_destination_ip: 10.10.11.5
+    policy_creation_application: ssh
+    policy_creation_policy_files:
+      - ssh_jumpserver_inbound_access.yml # <---- Replace with the path to your policy file, or files
 
-# --- END PRESET POLICY SECTION ---
+  roles:
+    - paloaltonetworks.panos_policy_automation.policy_creation # Note the included role
+
+  tasks:
+    - name: Print the results
+      ansible.builtin.debug:
+        msg: "{{ policy_creation_security_policy_match_result }}"
 ```
-
-## Running the playbook
-
-Run the `lab_policy.yml` playbook to deploy the policy.
 
 ```shell
-ansible-playbook playbooks/orchestrator/lab_policy.yml
+ansible-playbook example_playbook.yml
 ```
-
-In this example, `lab_policy` will prompt for the SIP/DIP values and the application. In your environment, you may
-trigger this playbook (or another playbook for a different set of hosts) using EDA or any other system that can 
-populate these values.
 
 You will see the policy is matched and the relevant address groups updated.
 

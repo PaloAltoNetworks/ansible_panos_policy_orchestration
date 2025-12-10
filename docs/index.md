@@ -1,4 +1,12 @@
-# Welcome the PAN-OS Policy Orchestration (with Ansible!) docs
+# Ansible PAN-OS Policy Automation
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/adambaumeister/ansible_panos_policy_orchestration)
+![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/adambaumeister/ansible_panos_policy_orchestration?base=master&head=develop&label=Changes%20Pending%20Release)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/adambaumeister/ansible_panos_policy_orchestration/ci.yml)
+![GitHub License](https://img.shields.io/github/license/adambaumeister/ansible_panos_policy_orchestration)
+![GitHub Repo stars](https://img.shields.io/github/stars/adambaumeister/ansible_panos_policy_orchestration)
+![GitHub Release](https://img.shields.io/github/v/release/adambaumeister/ansible_panos_policy_orchestration)
+![Github Pages](https://img.shields.io/badge/github-pages-black?logo=githubpages&link=https%3A%2F%2Fadambaumeister.github.io%2Fansible_panos_policy_orchestration%2F)
 
 This repository provides a framework and a philosophy for creating PAN-OS security policies
 via Automation.
@@ -13,26 +21,20 @@ This repository would be of interest to you if:
 
 ### Requirements
 
- * 🐍 Python 3.11+
+ * Python 3.11+
  * Ansible 2.16+
+ * Panorama (this collection does NOT work for standalone firewalls or Strata Cloud Manager)
+ * NGFWs connected to Panorama must be running Routed mode
 
-
-### Install the Paloaltonetworks Collection
-
-```shell
-ansible-galaxy install paloaltonetworks.panos
-```
-
-### Clone this repo
+### Install this collection
 
 ```shell
-# ssh
-git clone git@github.com:adambaumeister/ansible_panos_policy_orchestration.git
-# https
-https://github.com/adambaumeister/ansible_panos_policy_orchestration.git
+ansible-galaxy install paloaltonetworks.panos_policy_automation
 ```
 
 ### Define your Inventory
+
+In this example, we are defining one panorama host under "lab".
 
 ```yaml title='inventory.yml'
 all:
@@ -49,7 +51,7 @@ all:
           # Username should be provided via PAN_USERNAME environment variable
           # Example: export PAN_USERNAME="admin"
       vars:
-        # Common variables for lab environment
+        # Common variables
         ansible_connection: local
         ansible_python_interpreter: "{{ ansible_playbook_python }}"
         # These variables are only used when creating COMPLETELY NEW policies
@@ -59,10 +61,86 @@ all:
         default_rule_location: bottom
 ```
 
-### Run the connectivity playbook to validate connectivity
+### Define your preset policy files
 
-```shell
-ansible-playbook playbooks/testing/connectivity.yml
+Preset policy files are used to map incoming policy requests to object groups or security rules using Ansible filter
+logic. Policy files are literal task files that produce the required variables for the role to execute.
+
+Here's an example:
+
+```yaml
+---
+# This is the Webservers outbound policy. The purpose of these tasks is to take incoming requests and see if they
+# match this policy, returning the preset address group that they can be added to when a policy change is required.
+# Webservers should be allowed to talk to any host on the internet, so we can disregard the destination IP!
+
+- name: Match webserver outbound policy
+  ansible.builtin.set_fact:
+    policy_match: true # Set the fact that we did match a policy
+    policy_creation_source_address_group: PRESET_LAB_WEB_OUTBOUND # In this case, the policy preset is an address_group type
+    application_group: PRESET_LAB_WEB_OUTBOUND # If an application is passed, we should also include it in the policy.
+    device_group: Lab # Finally, we set the device group!
+  when:
+    - policy_creation_source_ip is defined
+    - policy_creation_destination_ip is defined
+    - "'10.10.10.0/24' | ansible.utils.network_in_network( policy_creation_source_ip )"
+    - "not '10.0.0.0/8' | ansible.utils.network_in_network( policy_creation_destination_ip )"
 ```
 
-[Proceed to the User Guide](user_guide/introduction.md)
+### Create the policy request, as an ansibles vars file
+
+Now, we have to give Ansible variables for the new policy to define the attributes.
+
+For simplicity, we do so within a vars file. 
+
+```yaml
+---
+policy_creation_source_ip: 10.10.10.11
+policy_creation_destination_ip: 8.8.8.8
+application: dns
+policy_creation_policy_files:
+  - example_outbound_policy_file.yml  # <---- Note we included your "policy file" here!
+```
+
+### Create your playbook and include the role
+
+```yaml
+---
+- hosts: lab # <---- Replace this with your group 
+  connection: local
+  gather_facts: false
+  name: Test the Lookup Policy playbook
+
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'PAN_USERNAME') }}"
+      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+
+  roles:
+    - paloaltonetworks.panos_policy_automation.policy_creation # Note the included role
+
+  tasks:
+    - name: Print the results
+      ansible.builtin.debug:
+        msg: "{{ policy_creation_security_policy_match_result }}"
+```
+
+### Execute the playbook
+
+Note, replace the playbook and vars file names with your versions.
+
+```shell
+ansible-playbook your_playbook.yml -i inventory.yml --extra-vars=@vars_file.yml
+```
+
+## Need help?
+
+Read the [docs](https://paloaltonetworks.github.io/ansible_panos_policy_orchestration/) for more information.
+
+## Responsible AI Assistance Disclosure
+
+Generative AI through the use of large language models has been used selectively in this repository
+in the following ways:
+
+1. Creating or editing documentation

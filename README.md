@@ -23,9 +23,10 @@ This repository would be of interest to you if:
 
 ### Requirements
 
- * 🐍 Python 3.11+
+ * Python 3.11+
  * Ansible 2.16+
-
+ * Panorama (this collection does NOT work for standalone firewalls or Strata Cloud Manager)
+ * NGFWs connected to Panorama must be running Routed mode
 
 ### Install this collection
 
@@ -138,3 +139,12 @@ ansible-playbook your_playbook.yml -i inventory.yml --extra-vars=@vars_file.yml
 ## Need help?
 
 Read the [docs](https://paloaltonetworks.github.io/ansible_panos_policy_orchestration/) for more information.
+
+## Responsible AI Assistance Disclosure
+
+Generative AI through the use of large language models has been used selectively in this repository
+in the following ways:
+
+1. Creating or editing documentation
+2. Refactoring modules
+3. Creation of unit tests
