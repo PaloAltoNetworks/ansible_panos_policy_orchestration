@@ -32,7 +32,7 @@
           ip_address: "{{ provider.ip_address }}"
           username: "{{ provider.username }}"
           password: "{{ provider.password }}"
-          serial_number: "{{ serialno}}"
+          serial_number: "{{ serialno }}"
         cmd: "{{ policy_creation_test_xml }}"
         cmd_is_xml: true
       register: policy_creation_security_policy_match_result

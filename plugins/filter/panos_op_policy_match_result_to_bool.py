@@ -32,7 +32,7 @@ EXAMPLES = '''
           <destination-port>443</destination-port>
         </security-policy-match>
       </test>
-      
+
 - name: Test the current status of the security policy
   paloaltonetworks.panos.panos_op:
     provider:
@@ -43,13 +43,12 @@ EXAMPLES = '''
     cmd: "{{ policy_creation_test_xml }}"
     cmd_is_xml: true
   register: policy_creation_security_policy_match_result
-  
+
 - name: Set the policy match result
   ansible.builtin.set_fact:
     policy_creation_security_matches_existing_policy: >
       {{ policy_creation_security_policy_match_result |
          paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}
-
 '''
 
 RETURN = '''

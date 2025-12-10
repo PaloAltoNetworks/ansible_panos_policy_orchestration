@@ -25,7 +25,7 @@
 
     # Example with show interface all output
     - name: Map interfaces to zones
-      set_fact:
+      ansible.builtin.set_fact:
         zones: "{{ interface_data | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(my_interfaces) }}"
       vars:
         my_interfaces:

@@ -146,3 +146,5 @@ Generative AI through the use of large language models has been used selectively
 in the following ways:
 
 1. Creating or editing documentation
+2. Refactoring modules
+3. Creation of unit tests
