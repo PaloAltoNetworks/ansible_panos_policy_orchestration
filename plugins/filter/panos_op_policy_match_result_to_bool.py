@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 DOCUMENTATION = '''
 name: panos_op_policy_match_result_to_bool
@@ -60,7 +59,6 @@ _value:
 
 import json
 from json import JSONDecodeError
-from typing import Union
 
 
 def panos_op_policy_match_result_to_bool(data):
