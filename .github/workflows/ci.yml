@@ -35,6 +35,11 @@ jobs:
         run: |
           ansible-lint ../ansible_panos_policy_orchestration/ --offline
 
+      - name: Ansible Sanity Tests
+        run: |
+          ansible-test sanity
+
+
   python-tests:
     runs-on: ubuntu-latest
     name: Python Filter Tests
