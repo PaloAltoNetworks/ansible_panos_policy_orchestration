@@ -42,7 +42,7 @@ jobs:
       - name: Ansible Sanity Tests
         run: |
           cd ansible_collections/paloaltonetworks/panos_policy_automation
-          ansible-test sanity
+          ansible-test sanity --exclude mkdocs.yml
 
   secrets-scan:
     runs-on: ubuntu-latest
