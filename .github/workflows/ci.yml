@@ -36,7 +36,7 @@ jobs:
       - name: Ansible lint
         run: |
           cd ansible_collections/paloaltonetworks
-          ansible-lint ../ansible_panos_policy_orchestration/ --offline
+          ansible-lint ansible_panos_policy_orchestration --offline
 
       - name: Ansible Sanity Tests
         run: |
