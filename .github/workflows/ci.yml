@@ -7,7 +7,7 @@ defaults:
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [master]
 jobs:
   ansible-syntax:
     runs-on: ubuntu-latest

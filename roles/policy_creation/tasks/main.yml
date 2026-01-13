@@ -79,6 +79,8 @@
         file: new/lookup_policy.yml
 
     - name: Create Rule Block
+      when:
+        - not policy_creation_security_matches_existing_policy
       block:
         - name: RULE creation
           ansible.builtin.include_tasks:
@@ -87,8 +89,7 @@
         - name: Update that the config has changed
           ansible.builtin.set_fact:
             policy_creation_config_changed: true
-      when:
-        - not policy_creation_security_matches_existing_policy
+
 
 - name: Commit Block - Triggers on any change
   when: policy_creation_config_changed
@@ -96,7 +97,7 @@
     - name: COMMIT all changes
       paloaltonetworks.panos.panos_commit_panorama:
         provider: "{{ provider }}"
-        device_groups: [ "{{ device_group | default(default_new_policy_device_group) }}" ]
+        device_groups: ["{{ device_group | default(default_new_policy_device_group) }}"]
         description: "Commit Changes"
         admins:
           - "{{ provider.username }}"
@@ -123,4 +124,3 @@
     - name: Print the results
       ansible.builtin.debug:
         msg: "{{ policy_creation_security_matches_existing_policy }}"
-

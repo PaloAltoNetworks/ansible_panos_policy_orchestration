@@ -56,7 +56,7 @@ jobs:
       - name: Update Ansible Galaxy file with the next version
         run: |
           sed -i 's/version\:.*/version: ${{ steps.get_version.outputs.NEXT_VERSION }}/' galaxy.yml
-    
+
       - name: Commit and push galaxy changes
         run: |
           git config --global user.name 'Github Actions Release Pipeline'
