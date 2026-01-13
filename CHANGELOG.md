@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.1...v1.3.2) (2026-01-13)
+
+
+### Bug Fixes
+
+* All content updated to fit the standard for Ansible Validated Content ([#13](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/issues/13)) ([4c224cc](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/4c224cc7aa3677836c22e88f5531bcce8c178c41))
+
 ## [1.3.1](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.0...v1.3.1) (2025-12-10)
 
 
