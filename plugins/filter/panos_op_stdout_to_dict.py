@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 DOCUMENTATION = '''
 name: panos_op_stdout_to_dict

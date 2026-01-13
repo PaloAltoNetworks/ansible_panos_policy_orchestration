@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 DOCUMENTATION = '''
 name: panos_op_routing_result_to_interfaces
@@ -47,7 +46,6 @@ _value:
 '''
 
 import json
-from typing import Union
 
 
 def panos_op_routing_result_to_interfaces(results):

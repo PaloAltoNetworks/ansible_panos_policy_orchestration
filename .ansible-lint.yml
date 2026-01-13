@@ -9,4 +9,6 @@ skip_list:
 
 exclude_paths:
   - mkdocs.yml
+  - panos_policy_automation/mkdocs.yml
   - .github
+  - panos_policy_automation/.github

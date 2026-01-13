@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 DOCUMENTATION = '''
 name: panos_op_stdout_results_to_list
@@ -41,7 +40,6 @@ _value:
 '''
 
 import json
-from typing import Union
 
 
 def panos_op_stdout_results_to_list(data):

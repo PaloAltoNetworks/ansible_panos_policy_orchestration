@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 DOCUMENTATION = '''
 name: panos_op_get_zone_from_interface
 short_description: Get security zone from interface names
@@ -54,7 +52,6 @@ _value:
 '''
 
 from xml.etree.ElementTree import fromstring
-from typing import Union
 
 
 def panos_op_get_zone_from_interface(data, interface_names):
