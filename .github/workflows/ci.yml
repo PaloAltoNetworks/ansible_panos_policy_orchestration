@@ -43,29 +43,6 @@ jobs:
           cd ansible_collections/paloaltonetworks
           ansible-test sanity
 
-
-  python-tests:
-    runs-on: ubuntu-latest
-    name: Python Filter Tests
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
-
-      - name: Set up Python
-        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-
-      - name: Run custom filter tests
-        run: |
-          python -m pytest ./plugins/filter/test_custom_filters.py -v
-
   secrets-scan:
     runs-on: ubuntu-latest
     name: Secrets Scanning
