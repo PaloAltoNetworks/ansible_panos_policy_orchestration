@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
         with:
-          path: "ansible_collections/paloaltonetworks"
+          path: "ansible_collections/paloaltonetworks/panos_policy_automation"
 
       - name: Set up Python
         uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
@@ -36,11 +36,12 @@ jobs:
       - name: Ansible lint
         run: |
           cd ansible_collections/paloaltonetworks
-          ansible-lint ansible_panos_policy_orchestration --offline
+          ls -l
+          ansible-lint panos_policy_automation --offline
 
       - name: Ansible Sanity Tests
         run: |
-          cd ansible_collections/paloaltonetworks
+          cd ansible_collections/paloaltonetworks/panos_policy_automation
           ansible-test sanity
 
   secrets-scan:
