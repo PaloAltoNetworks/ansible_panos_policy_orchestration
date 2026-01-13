@@ -23,6 +23,9 @@
 # --- END PRESET POLICY SECTION ---
 
 - name: Policy Creation Block
+  when:
+    - policy_creation_policy_match is defined
+    - policy_creation_policy_match
   block:
     - name: ADDRESS GROUP PRESET - Deploy the Source IP to policy based on the preset configuration
       ansible.builtin.include_tasks:
@@ -58,9 +61,6 @@
     - name: Update that the config has changed
       ansible.builtin.set_fact:
         policy_creation_config_changed: true
-  when:
-    - policy_creation_policy_match is defined
-    - policy_creation_policy_match
 
 # --- Custom Section ---
 # This section of tasks will attempt to create new security policies by caluclating as many values as possible
@@ -68,6 +68,11 @@
 # For this to run it requires at least source ip, destination IP and an application to be given.
 
 - name: RULE CREATION BLOCK - Triggers when no preset rules match
+  when:
+    - not policy_creation_policy_match
+    - policy_creation_source_ip is defined and policy_creation_source_ip != ""
+    - policy_creation_destination_ip is defined and policy_creation_destination_ip != ""
+    - policy_creation_application is defined and policy_creation_application != ""
   block:
     - name: RULE policy lookup
       ansible.builtin.include_tasks:
@@ -85,18 +90,13 @@
       when:
         - not policy_creation_security_matches_existing_policy
 
-  when:
-    - not policy_creation_policy_match
-    - policy_creation_source_ip is defined and policy_creation_source_ip != ""
-    - policy_creation_destination_ip is defined and policy_creation_destination_ip != ""
-    - policy_creation_application is defined and policy_creation_application != ""
-
 - name: Commit Block - Triggers on any change
+  when: policy_creation_config_changed
   block:
     - name: COMMIT all changes
       paloaltonetworks.panos.panos_commit_panorama:
         provider: "{{ provider }}"
-        device_groups: ["{{ device_group | default(default_new_policy_device_group) }}"]
+        device_groups: [ "{{ device_group | default(default_new_policy_device_group) }}" ]
         description: "Commit Changes"
         admins:
           - "{{ provider.username }}"
@@ -109,9 +109,12 @@
         description: "Commit and push changes"
         admins:
           - "{{ provider.username }}"
-  when: policy_creation_config_changed
 
 - name: Test the changes, if there were changes
+  when:
+    - policy_creation_config_changed
+    - policy_creation_source_ip is defined
+    - policy_creation_destination_ip is defined
   block:
     - name: Test the new policy, if one was added
       ansible.builtin.include_tasks:
@@ -120,7 +123,4 @@
     - name: Print the results
       ansible.builtin.debug:
         msg: "{{ policy_creation_security_matches_existing_policy }}"
-  when:
-    - policy_creation_config_changed
-    - policy_creation_source_ip is defined
-    - policy_creation_destination_ip is defined
+

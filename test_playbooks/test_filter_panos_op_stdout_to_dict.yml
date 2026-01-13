@@ -1,8 +1,8 @@
 ---
-- hosts: lab # <---- Replace this with your group
+- name: Tests the panos_op_routing_result_to_interfaces filter is working properly
+  hosts: lab # <---- Replace this with your group
   connection: local
   gather_facts: true # <--- Requied for getting the current time
-  name: Tests the panos_op_routing_result_to_interfaces filter is working properly
 
   vars:
     provider:

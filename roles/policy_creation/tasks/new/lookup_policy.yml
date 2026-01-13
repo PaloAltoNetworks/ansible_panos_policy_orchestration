@@ -33,6 +33,7 @@
     - default_new_policy_device_group is defined
 
 - name: Get device for testing block
+  when: default_test_policy_serial_number is not defined
   block:
     - name: Get all connected devices
       paloaltonetworks.panos.panos_op:
@@ -54,7 +55,6 @@
         policy_creation___device_list:
           - "{{ policy_creation__show_devices_output_dict.response.result.devices.entry }}"
       when: "policy_creation__show_devices_output_dict.response.result.devices.entry is mapping"
-  when: default_test_policy_serial_number is not defined
 
 - name: Set device_list when we have a serial number for all testing
   ansible.builtin.set_fact:

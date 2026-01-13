@@ -1,8 +1,8 @@
 ---
-- hosts: lab # <---- Replace this with your group
+- name: Tests the get_zone_from_interface filter is working correctly
+  hosts: lab # <---- Replace this with your group
   connection: local
   gather_facts: true # <--- Requied for getting the current time
-  name: Tests the get_zone_from_interface filter is working correctly
 
   vars:
     provider:
