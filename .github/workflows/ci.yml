@@ -35,9 +35,9 @@ jobs:
 
       - name: Ansible lint
         run: |
-          cd ansible_collections/paloaltonetworks
+          cd ansible_collections/paloaltonetworks/panos_policy_automation
           ls -l
-          ansible-lint panos_policy_automation --offline
+          ansible-lint . --offline
 
       - name: Ansible Sanity Tests
         run: |
