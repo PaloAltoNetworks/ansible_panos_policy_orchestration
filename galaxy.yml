@@ -68,6 +68,7 @@ build_ignore:
   - .ansible
   - .gitignore
   - .idea
+  - ansible.cfg
 
 # A dict controlling use of manifest directives used in building the collection artifact. The key 'directives' is a
 # list of MANIFEST.in style
