@@ -1,0 +1,20 @@
+name: Weekly Token Refresh
+
+on:
+  schedule:
+    # This runs at 00:00 every Sunday
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual run
+
+jobs:
+  refresh-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Refresh URL
+        env:
+          ANSIBLE_AAP_TOKEN: ${{ secrets.ANSIBLE_AAP_TOKEN }}
+        run: |
+          curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
+            -d grant_type=refresh_token \
+            -d client_id="cloud-services" \
+            -d refresh_token=$ANSIBLE_AAP_TOKEN
