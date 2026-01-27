@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.2...v1.3.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* Publish content to AAP ([9a423c9](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/9a423c96cc5dc66d62a3608d438449d100c14fcc))
+
 ## [1.3.2](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.1...v1.3.2) (2026-01-13)
 
 
