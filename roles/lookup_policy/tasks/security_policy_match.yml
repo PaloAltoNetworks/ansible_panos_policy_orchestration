@@ -6,7 +6,7 @@
     policy_creation_test_xml: |
       <test>
         <security-policy-match>
-          <source>{{ policy_creation_sourcce_ip }}</source>
+          <source>{{ policy_creation_source_ip }}</source>
           <destination>{{ policy_creation_destination_ip }}</destination>
           <application>{{ policy_creation_application | default('ssl') }}</application>
           <protocol>6</protocol>

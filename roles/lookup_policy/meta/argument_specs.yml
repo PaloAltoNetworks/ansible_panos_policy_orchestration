@@ -1,0 +1,28 @@
+---
+argument_specs:
+  main:
+    short_description: Check whether network traffic is permitted or denied within PAN-OS firewalls.
+    description:
+      - >-
+        Tests a given tuple representative of a network session (source/destination IP, application, etc) against 
+        PAN-OS NGFW's using the test security-policy match command to determine if it would be blocked or allowed
+        by the configured security policy.
+    options:
+      policy_creation_source_ip:
+        type: "str"
+        required: false
+        description: "The the source IP for the new policy"
+      policy_creation_destination_ip:
+        type: "str"
+        required: false
+        description: "The the destination IP for the new policy"
+      policy_creation_application:
+        type: "str"
+        required: false
+        default: ssl
+        description: "The PAN-OS compatible Application for the policy."
+      policy_creation_destination_port:
+        type: "str"
+        required: false
+        default: "443"
+        description: "The TCP or UDP port used by the traffic in the policy"
