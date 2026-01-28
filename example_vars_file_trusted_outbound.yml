@@ -4,3 +4,4 @@ policy_creation_destination_ip: 8.8.8.8
 policy_creation_application: dns
 policy_creation_policy_files:
   - example_outbound_policy_file.yml
+  - example_web_to_database_policy_file.yml
