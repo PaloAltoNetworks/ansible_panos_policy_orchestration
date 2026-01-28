@@ -1,0 +1,19 @@
+---
+- hosts: lab # <---- Replace this with your group
+  connection: local
+  gather_facts: true # <--- Required for getting the current time
+  name: Example Policy Creation Playbook
+
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'PAN_USERNAME') }}"
+      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+
+  roles:
+    - paloaltonetworks.panos_policy_automation.policy_creation # Note the included role
+
+  tasks:
+    - name: Print the results
+      ansible.builtin.debug:
+        msg: "{{ policy_creation_security_policy_match_result }}"

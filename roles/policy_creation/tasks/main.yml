@@ -14,8 +14,8 @@
     policy_creation_config_changed: false
     policy_creation_policy_match: false
 
-# Include tasks from user-provided task files
-- name: Test against Webserver outbound policy
+# Include tasks from user-provided policy files
+- name: Include User-Provided policy files
   ansible.builtin.include_tasks:
     file: "{{ item }}"
   loop: "{{ policy_creation_policy_files }}"
