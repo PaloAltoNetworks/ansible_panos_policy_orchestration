@@ -75,8 +75,8 @@
     - policy_creation_application is defined and policy_creation_application != ""
   block:
     - name: RULE policy lookup
-      ansible.builtin.include_tasks:
-        file: new/lookup_policy.yml
+      ansible.builtin.include_role:
+        name: paloaltonetworks.panos_policy_automation.lookup_policy
 
     - name: Create Rule Block
       when:
@@ -118,8 +118,8 @@
     - policy_creation_destination_ip is defined
   block:
     - name: Test the new policy, if one was added
-      ansible.builtin.include_tasks:
-        file: new/lookup_policy.yml
+      ansible.builtin.include_role:
+        name: paloaltonetworks.panos_policy_automation.lookup_policy
 
     - name: Print the results
       ansible.builtin.debug:
