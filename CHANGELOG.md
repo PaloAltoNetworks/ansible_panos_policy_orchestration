@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.2...v1.4.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* Move to protected tags instead of conditional release ([d8a96ab](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/d8a96ab8a3df1982ef11eb0feeff5cdcf750c439))
+
 ## [1.4.2](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.1...v1.4.2) (2026-01-29)
 
 
