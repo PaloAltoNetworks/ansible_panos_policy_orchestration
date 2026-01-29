@@ -5,4 +5,3 @@ policy_creation_application: ssh
 policy_creation_policy_files:
   - example_outbound_policy_file.yml
   - example_web_to_database_policy_file.yml
-
