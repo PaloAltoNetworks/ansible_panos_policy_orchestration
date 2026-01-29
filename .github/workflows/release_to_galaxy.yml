@@ -5,8 +5,6 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+' # Matches tags like v1.0.0, v2.1.5, etc.
-    branches:
-      - 'master' # Ensures the workflow runs on pushes to the main branch
 permissions:
   contents: write
   issues: write
@@ -14,6 +12,7 @@ permissions:
 
 jobs:
   release:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     name: Release to AAP and Galaxy
 
