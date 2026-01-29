@@ -43,7 +43,7 @@ jobs:
           git config --global user.name 'Github Actions Release Pipeline'
           git config --global user.email 'githubactions@users.noreply.github.com'
           git commit -am "chore: Update Ansible Galaxy file [skip ci]"
-          git push
+          git push origin HEAD:master
         # This can fail in cases where CI is being re-run but we've already bumped the version, so allow it to fail.
         continue-on-error: true
 
