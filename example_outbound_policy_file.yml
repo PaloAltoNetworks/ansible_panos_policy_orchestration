@@ -10,5 +10,5 @@
   when:
     - policy_creation_source_ip is defined
     - policy_creation_destination_ip is defined
-    - "'10.10.10.0/24' | ansible.utils.network_in_network( policy_creation_source_ip )"
+    - "'10.10.12.0/24' | ansible.utils.network_in_network( policy_creation_source_ip )"
     - "not '10.0.0.0/8' | ansible.utils.network_in_network( policy_creation_destination_ip )"

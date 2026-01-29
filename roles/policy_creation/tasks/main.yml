@@ -17,7 +17,7 @@
 # Include tasks from user-provided policy files
 - name: Include User-Provided policy files
   ansible.builtin.include_tasks:
-    file: "{{ item }}"
+    file: "{{ lookup('env', 'PWD') }}/{{ item }}"
   loop: "{{ policy_creation_policy_files }}"
 
 # --- END PRESET POLICY SECTION ---
