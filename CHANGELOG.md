@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.1...v1.4.2) (2026-01-29)
+
+
+### Bug Fixes
+
+* Change semantic release token ([fc30ba5](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/fc30ba530b0dc92fa3d633721550d93d1f55cd89))
+
 ## [1.4.1](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.0...v1.4.1) (2026-01-29)
 
 
