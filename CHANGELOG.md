@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.3...v1.4.4) (2026-01-29)
+
+
+### Bug Fixes
+
+* Fix CI and force release ([911d6aa](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/911d6aae01a6245e7ccc32fbb33adf4d846f48cb))
+
 ## [1.4.3](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.2...v1.4.3) (2026-01-29)
 
 
