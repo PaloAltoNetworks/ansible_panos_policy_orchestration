@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.0...v1.4.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* Update semantic release CI message so that it correctly triggers release ([f89e4a9](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/f89e4a99682ee8c03b6eb847a2e6fe71a7b3cdd8))
+
 # [1.4.0](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.3...v1.4.0) (2026-01-29)
 
 
