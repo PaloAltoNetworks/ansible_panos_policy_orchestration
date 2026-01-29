@@ -1,8 +1,8 @@
 ---
-- hosts: lab # <---- Replace this with your group
+- hosts: all
   connection: local
-  gather_facts: true # <--- Required for getting the current time
-  name: Example Policy Creation Playbook
+  gather_facts: true
+  name: Example Policy Lookup Playbook
 
   vars:
     provider:
@@ -11,7 +11,7 @@
       password: "{{ lookup('env', 'PAN_PASSWORD') }}"
 
   roles:
-    - paloaltonetworks.panos_policy_automation.lookup_policy # Note the included role
+    - paloaltonetworks.panos_policy_automation.lookup_policy
 
   tasks:
     - name: Print the results
