@@ -36,7 +36,7 @@ jobs:
       - name: Update Ansible Galaxy file with the next version (from Tag Reference)
         run: |
           VERSION_NUMBER=`echo ${{ github.ref_name }} | cut -c 2-`
-          sed -i 's/version\:.*/version: $VERSION_NUMBER/' galaxy.yml
+          sed -i "s/version\:.*/version: $VERSION_NUMBER/" galaxy.yml
 
       - name: Commit and push galaxy changes
         run: |
