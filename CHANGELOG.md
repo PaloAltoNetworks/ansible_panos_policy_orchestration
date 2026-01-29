@@ -1,3 +1,18 @@
+# [1.4.0](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.3...v1.4.0) (2026-01-29)
+
+
+### Bug Fixes
+
+* Several documentation improvements and example playbook provided ([9296e5d](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/9296e5d5f68f12195dce30caf6293a1266407772))
+* Update release CI to now correctly trigger on release, not on master ([da2839b](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/da2839bcc39a0ad7433b88e121847fe047a7f9ce))
+
+
+### Features
+
+* Added ARE support for test command. Note that zone resolution is not supported as FIB Lookup API for ARE is broken. ([c6d546c](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/c6d546cbe6e4157c3c6a6847df07833720347a87))
+* Added lookup_policy role ([21c7d9d](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/21c7d9d0e49a870047b491fe7117da5c547b747b))
+* Example playbooks are now executable as collection playbooks ([891802d](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/891802d5c4c950ba5d7a4aac62621cc505a2e279))
+
 ## [1.3.3](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.3.2...v1.3.3) (2026-01-27)
 
 
