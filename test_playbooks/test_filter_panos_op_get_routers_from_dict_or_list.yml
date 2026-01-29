@@ -1,0 +1,39 @@
+---
+- name: Tests the panos_op_get_routers_from_dict_or_list is working correctly
+  hosts: lab # <---- Replace this with your group
+  connection: local
+  gather_facts: true # <--- Requied for getting the current time
+
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'PAN_USERNAME') }}"
+      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+    serialno: "{{ lookup('env', 'PAN_TEST_SERIAL') }}"
+
+  tasks:
+    - name: Run advanced routing command
+      paloaltonetworks.panos.panos_op:
+        provider:
+          ip_address: "{{ provider.ip_address }}"
+          username: "{{ provider.username }}"
+          password: "{{ provider.password }}"
+          serial_number: "{{ serialno }}"
+        cmd: "<show><advanced-routing><route/></advanced-routing></show>"
+        cmd_is_xml: true
+      register: result
+
+
+    - name: Print results
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+
+    - name: Get routers from results
+      ansible.builtin.set_fact:
+        policy_creation_router_list: >
+          {{ result |
+             paloaltonetworks.panos_policy_automation.panos_op_get_routers_from_dict_or_list }}
+
+    - name: Print results
+      ansible.builtin.debug:
+        msg: "{{ policy_creation_router_list }}"
