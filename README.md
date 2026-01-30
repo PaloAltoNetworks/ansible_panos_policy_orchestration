@@ -8,7 +8,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/adambaumeister/ansible_panos_policy_orchestration)
 ![Github Pages](https://img.shields.io/badge/github-pages-black?logo=githubpages&link=https%3A%2F%2Fadambaumeister.github.io%2Fansible_panos_policy_orchestration%2F)
 
-Docs: https://paloaltonetworks.github.io/ansible_panos_policy_orchestration/
+[Documentation](https://paloaltonetworks.github.io/ansible_panos_policy_orchestration/)
 
 This repository provides a framework and a philosophy for creating PAN-OS security policies
 via Automation.
@@ -125,36 +125,10 @@ policy_creation_policy_files:
   - example_outbound_policy_file.yml  # <---- Note we included your "policy file" here!
 ```
 
-### Create your playbook and include the role
-
-```yaml
----
-- hosts: lab # <---- Replace this with your group 
-  connection: local
-  gather_facts: false
-  name: Test the Lookup Policy playbook
-
-  vars:
-    provider:
-      ip_address: "{{ ansible_host }}"
-      username: "{{ lookup('env', 'PAN_USERNAME') }}"
-      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
-
-  roles:
-    - paloaltonetworks.panos_policy_automation.policy_creation # Note the included role
-
-  tasks:
-    - name: Print the results
-      ansible.builtin.debug:
-        msg: "{{ lookup_policy_security_policy_match_result }}"
-```
-
-### Execute the playbook
-
 Note, replace the playbook and vars file names with your versions.
 
 ```shell
-ansible-playbook your_playbook.yml -i inventory.yml --extra-vars=@vars_file.yml
+ansible-playbook -i inventory.yml --extra-vars=@./policy_file.yml paloaltonetworks.panos_policy_automation.examples.create_policy
 ```
 
 ## Use Cases
