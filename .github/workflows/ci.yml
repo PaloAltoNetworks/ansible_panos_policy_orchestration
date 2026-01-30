@@ -47,7 +47,7 @@ jobs:
         run: |
           cd ansible_collections/paloaltonetworks/panos_policy_automation
           ls -l
-          ansible-lint --offline
+          ansible-lint --profile production
 
       - name: Ansible Sanity Tests
         run: |

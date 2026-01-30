@@ -24,7 +24,7 @@
       register: result
 
 
-    - name: Print results
+    - name: Print results of show route command
       ansible.builtin.debug:
         msg: "{{ result }}"
 
