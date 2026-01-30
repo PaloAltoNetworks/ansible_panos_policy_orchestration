@@ -3,8 +3,8 @@
 
 - name: Populate Defaults
   ansible.builtin.set_fact:
-    policy_creation_source_zones: "{{ policy_creation_source_zones | default(['any']) }}"
-    policy_creation_destination_zones: "{{ policy_creation_destination_zones | default(['any']) }}"
+    policy_creation_source_zones: "{{ lookup_policy_source_zones | default(['any']) }}"
+    policy_creation_destination_zones: "{{ lookup_policy_destination_zones | default(['any']) }}"
     policy_creation_tag: "{{ policy_creation_tag | default(default_new_policy_tag) }}"
     policy_creation_rule_name: "autogen_{{ ansible_date_time.epoch }}"
     policy_creation_source_address_name: "addr_{{ policy_creation_source_ip | replace('.', '_') | replace('/', '_') }}"
@@ -50,9 +50,9 @@
     tag_name: ["{{ policy_creation_tag }}"]
     source_zone: "{{ policy_creation_source_zones }}"
     source_ip: ["{{ policy_creation_source_ip }}"]
-    destination_zone: "{{ policy_creation_destination_zones }}"
+    destination_zone: "{{ policy_creation__destination_zones }}"
     destination_ip: ["{{ policy_creation_destination_ip }}"]
-    application: ["{{ policy_creation_application }}"]
+    application: ["{{ lookup_policy_application }}"]
     action: "allow"
     location: "{{ default_rule_location }}"
     existing_rule: "{{ default_location_rule_name | default('') }}"
@@ -67,9 +67,9 @@
     tag_name: ["{{ policy_creation_tag }}"]
     source_zone: "{{ policy_creation_source_zones }}"
     source_ip: ["{{ policy_creation_source_ip }}"]
-    destination_zone: "{{ policy_creation_destination_zones }}"
+    destination_zone: "{{ lookup_policy__destination_zones }}"
     destination_ip: ["{{ policy_creation_destination_ip }}"]
-    application: ["{{ policy_creation_application }}"]
+    application: ["{{ lookup_policy_application }}"]
     action: "allow"
     location: "{{ default_rule_location }}"
   when: default_location_rule_name is not defined

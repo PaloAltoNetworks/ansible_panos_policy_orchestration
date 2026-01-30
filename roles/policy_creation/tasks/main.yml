@@ -50,7 +50,7 @@
         file: preset/add_application_to_preset_group.yml
       when:
         - application_group is defined
-        - policy_creation_application is defined
+        - lookup_policy_application is defined
 
     - name: URL CATEGORY  PRESET - Deploy the URL to the given category based on the preset configuration
       ansible.builtin.include_tasks:
@@ -72,7 +72,7 @@
     - not policy_creation_policy_match
     - policy_creation_source_ip is defined and policy_creation_source_ip != ""
     - policy_creation_destination_ip is defined and policy_creation_destination_ip != ""
-    - policy_creation_application is defined and policy_creation_application != ""
+    - lookup_policy_application is defined and lookup_policy_application != ""
   block:
     - name: RULE policy lookup
       ansible.builtin.include_role:
@@ -80,7 +80,7 @@
 
     - name: Create Rule Block
       when:
-        - not policy_creation_security_matches_existing_policy
+        - not lookup_policy_security_matches_existing_policy
       block:
         - name: RULE creation
           ansible.builtin.include_tasks:
@@ -123,4 +123,4 @@
 
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ policy_creation_security_matches_existing_policy }}"
+        msg: "{{ lookup_policy_security_matches_existing_policy }}"

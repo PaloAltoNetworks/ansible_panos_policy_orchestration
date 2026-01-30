@@ -21,12 +21,12 @@ EXAMPLES = '''
 # Check if security policy match found a result
 - name: Set Test XML
   ansible.builtin.set_fact:
-    policy_creation_test_xml: |
+    lookup_policy_test_xml: |
       <test>
         <security-policy-match>
           <source>10.10.11.1</source>
           <destination>8.8.8.8</destination>
-          <application>{{ policy_creation_application | default('ssl') }}</application>
+          <application>{{ lookup_policy_application | default('ssl') }}</application>
           <protocol>6</protocol>
           <destination-port>443</destination-port>
         </security-policy-match>
@@ -39,14 +39,14 @@ EXAMPLES = '''
       username: "{{ provider.username }}"
       password: "{{ provider.password }}"
       serial_number: "{{ item.serial }}"
-    cmd: "{{ policy_creation_test_xml }}"
+    cmd: "{{ lookup_policy_test_xml }}"
     cmd_is_xml: true
-  register: policy_creation_security_policy_match_result
+  register: lookup_policy_security_policy_match_result
 
 - name: Set the policy match result
   ansible.builtin.set_fact:
-    policy_creation_security_matches_existing_policy: >
-      {{ policy_creation_security_policy_match_result |
+    lookup_policy_security_matches_existing_policy: >
+      {{ lookup_policy_security_policy_match_result |
          paloaltonetworks.panos_policy_automation.panos_op_policy_match_result_to_bool }}
 '''
 

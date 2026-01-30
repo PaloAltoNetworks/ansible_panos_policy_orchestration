@@ -5,7 +5,7 @@
   ansible.builtin.set_fact:
     policy_creation_policy_match: true # Set the fact that we did match a policy
     policy_creation_source_address_group: PRESET_LAB_TRUSTED_OUTBOUND # In this case, the policy preset is an address_group type
-    policy_creation_application_group: PRESET_LAB_TRUSTED_OUTBOUND # If an application is passed, we should also include it in the policy.
+    lookup_policy_application_group: PRESET_LAB_TRUSTED_OUTBOUND # If an application is passed, we should also include it in the policy.
     policy_creation_device_group: Lab # Finally, we set the device group!
   when:
     - policy_creation_source_ip is defined

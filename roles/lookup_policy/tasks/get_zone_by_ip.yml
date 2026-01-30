@@ -4,9 +4,9 @@
 
 - name: Set the routing table result list
   ansible.builtin.set_fact:
-    policy_creation__show_route: []
+    lookup_policy__show_route: []
   when:
-    - policy_creation__show_route is not defined
+    - lookup_policy__show_route is not defined
 
 - name: Get the ROUTING TABLE
   block:
@@ -18,16 +18,16 @@
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
         cmd: "show routing route"
-      register: policy_creation__show_route_result
+      register: lookup_policy__show_route_result
 
     - name: Parse as JSON
       ansible.builtin.set_fact:
-        policy_creation__show_route_result_dict: "{{ policy_creation__show_route_result.stdout | from_json }}"
+        lookup_policy__show_route_result_dict: "{{ lookup_policy__show_route_result.stdout | from_json }}"
 
     - name: Set list of virtual routers
       ansible.builtin.set_fact:
-        policy_creation__virtual_routers: "{{ policy_creation__virtual_routers | d([]) + [route['virtual-router']] }}"
-      loop: "{{ policy_creation__show_route_result_dict.response.result.entry }}"
+        lookup_policy__virtual_routers: "{{ lookup_policy__virtual_routers | d([]) + [route['virtual-router']] }}"
+      loop: "{{ lookup_policy__show_route_result_dict.response.result.entry }}"
       loop_control:
         loop_var: route
 
@@ -40,8 +40,8 @@
           serial_number: "{{ item.serial }}"
         cmd: "<test><routing><fib-lookup><virtual-router>{{ vr }}</virtual-router><ip>{{ _target_ip }}</ip></fib-lookup></routing></test>"
         cmd_is_xml: true
-      register: policy_creation__test_routing_result
-      loop: "{{ policy_creation__virtual_routers | unique }}"
+      register: lookup_policy__test_routing_result
+      loop: "{{ lookup_policy__virtual_routers | unique }}"
       loop_control:
         loop_var: vr
 
@@ -55,12 +55,12 @@
           serial_number: "{{ item.serial }}"
         cmd: "<show><advanced-routing><route/></advanced-routing></show>"
         cmd_is_xml: true
-      register: policy_creation__show_route_result
+      register: lookup_policy__show_route_result
 
     - name: Set list of Logical Routers
       ansible.builtin.set_fact:
-        policy_creation__virtual_routers: >
-            {{ policy_creation__show_route_result | 
+        lookup_policy__virtual_routers: >
+            {{ lookup_policy__show_route_result |
                 paloaltonetworks.panos_policy_automation.panos_op_get_routers_from_dict_or_list }}
 
     - name: --- WARNING! SKIPPED DUE TO MISSING API SUPPORT IN PANOS! --- Find the outbound interface(s) (ARE)
@@ -72,8 +72,8 @@
           serial_number: "{{ item.serial }}"
         cmd: "<test><advanced-routing><fib-lookup><logical-router>{{ vr }}</logical-router><ip>{{ _target_ip }}</ip></fib-lookup></advanced-routing></test>"
         cmd_is_xml: true
-      register: policy_creation__test_routing_result
-      loop: "{{ policy_creation__virtual_routers | unique }}"
+      register: lookup_policy__test_routing_result
+      loop: "{{ lookup_policy__virtual_routers | unique }}"
       loop_control:
         loop_var: vr
       when:
@@ -81,15 +81,15 @@
 
     - name: Set skip for zone resolution, unsupported routing engine
       ansible.builtin.set_fact:
-        policy_creation_skip_zone_resolution: true
+        lookup_policy_skip_zone_resolution: true
 
 - name: Get interfaces from routing results
-  when: not policy_creation_skip_zone_resolution
+  when: not lookup_policy_skip_zone_resolution
   block:
     - name: Get interfaces from results
       ansible.builtin.set_fact:
-        policy_creation_interface_list: >
-          {{ policy_creation__test_routing_result.results |
+        lookup_policy_interface_list: >
+          {{ lookup_policy__test_routing_result.results |
              paloaltonetworks.panos_policy_automation.panos_op_routing_result_to_interfaces }}
 
     - name: Get the zone
@@ -100,12 +100,12 @@
           password: "{{ provider.password }}"
           serial_number: "{{ item.serial }}"
         cmd: "show interface all"
-      register: policy_creation__show_interfaces_result
+      register: lookup_policy__show_interfaces_result
 
     - name: Set the ZONE list
       ansible.builtin.set_fact:
-        policy_creation_destination_zones: >
+        lookup_policy__destination_zones: >
           {{
-            policy_creation_destination_zones | default([]) + policy_creation__show_interfaces_result
-            | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(policy_creation_interface_list) | default([])
+            lookup_policy__destination_zones | default([]) + lookup_policy__show_interfaces_result
+            | paloaltonetworks.panos_policy_automation.panos_op_get_zone_from_interface(lookup_policy_interface_list) | default([])
           }}"

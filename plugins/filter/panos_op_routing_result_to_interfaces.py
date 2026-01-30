@@ -28,12 +28,12 @@ EXAMPLES = '''
       serial_number: "{{ serialno }}"
     cmd: "<test><routing><fib-lookup><virtual-router>default</virtual-router><ip>8.8.8.8</ip></fib-lookup></routing></test>"
     cmd_is_xml: true
-  register: policy_creation__test_routing_result
+  register: lookup_policy__test_routing_result
 
 - name: Get interfaces from results
   ansible.builtin.set_fact:
-    policy_creation_interface_list: >
-      {{ policy_creation__test_routing_result.results |
+    lookup_policy_interface_list: >
+      {{ lookup_policy__test_routing_result.results |
          paloaltonetworks.panos_policy_automation.panos_op_routing_result_to_interfaces }}
 '''
 

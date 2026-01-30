@@ -16,19 +16,19 @@
 
 - name: Populate all facts for policy
   ansible.builtin.set_fact:
-    policy_creation_destination_port: "{{ policy_creation_destination_port | default('443') }}"
-    policy_creation_protocol: "{{ policy_creation_protocol | default('6') }}"
-    policy_creation_application: "{{ policy_creation_application | default('ssl') }}"
+    lookup_policy_destination_port: "{{ lookup_policy_destination_port | default('443') }}"
+    lookup_policy_protocol: "{{ lookup_policy_protocol | default('6') }}"
+    lookup_policy_application: "{{ lookup_policy_application | default('ssl') }}"
 
 - name: Set the operating device group
   ansible.builtin.set_fact:
-    _policy_creation_device_group: "{{ policy_creation_device_group }}"
+    lookup_policy__device_group: "{{ policy_creation_device_group }}"
   when:
     - policy_creation_device_group is defined
 
 - name: Set the operating device group
   ansible.builtin.set_fact:
-    _policy_creation_device_group: "{{ default_new_policy_device_group }}"
+    lookup_policy__device_group: "{{ default_new_policy_device_group }}"
   when:
     - default_new_policy_device_group is defined
 
@@ -39,39 +39,39 @@
       paloaltonetworks.panos.panos_op:
         provider: "{{ provider }}"
         cmd: "show devices connected"
-      register: policy_creation__show_devices_output
+      register: lookup_policy__show_devices_output
 
     - name: Set JSON Object for stdout
       ansible.builtin.set_fact:
-        policy_creation__show_devices_output_dict: >
-          {{ policy_creation__show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}
+        lookup_policy__show_devices_output_dict: >
+          {{ lookup_policy__show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}
 
     - name: Set the list of items
       ansible.builtin.set_fact:
-        policy_creation___device_list: "{{ policy_creation__show_devices_output_dict.response.result.devices.entry }}"
+        lookup_policy__device_list: "{{ lookup_policy__show_devices_output_dict.response.result.devices.entry }}"
 
     - name: Set the list of items (if single item response)
       ansible.builtin.set_fact:
-        policy_creation___device_list:
-          - "{{ policy_creation__show_devices_output_dict.response.result.devices.entry }}"
-      when: "policy_creation__show_devices_output_dict.response.result.devices.entry is mapping"
+        lookup_policy__device_list:
+          - "{{ lookup_policy__show_devices_output_dict.response.result.devices.entry }}"
+      when: "lookup_policy__show_devices_output_dict.response.result.devices.entry is mapping"
 
 - name: Set device_list when we have a serial number for all testing
   ansible.builtin.set_fact:
-    policy_creation___device_list:
+    lookup_policy__device_list:
       - serial: "{{ default_test_policy_serial_number }}"
   when: default_test_policy_serial_number is defined
 
 - name: Test the security policy - determines if a new policy is needed
   ansible.builtin.include_tasks:
     file: security_policy_match.yml
-  with_items: "{{ policy_creation___device_list }}"
+  with_items: "{{ lookup_policy__device_list }}"
 
 - name: Get the zone for the DESTINATION IP
   ansible.builtin.include_tasks:
     file: get_zone_by_ip.yml
   vars:
     _target_ip: "{{ policy_creation_destination_ip }}"
-  with_items: "{{ policy_creation___device_list }}"
+  with_items: "{{ lookup_policy__device_list }}"
   when:
-    - not policy_creation_security_matches_existing_policy
+    - not lookup_policy_security_matches_existing_policy

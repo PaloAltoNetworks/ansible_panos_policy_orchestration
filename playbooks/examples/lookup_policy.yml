@@ -16,4 +16,4 @@
   tasks:
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ policy_creation_security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}"
+        msg: "{{ lookup_policy_security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}"

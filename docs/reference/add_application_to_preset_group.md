@@ -22,7 +22,7 @@ flowchart TD
 
 | Variable | Description |
 |----------|-------------|
-| `policy_creation_application` | The application to add to the group |
+| `lookup_policy_application` | The application to add to the group |
 | `application_group` | The name of the application group to update |
 | `policy_creation_device_group` | The device group where the application group exists |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
@@ -48,7 +48,7 @@ This returns the existing `value` list of member applications.
 ### Adding New Member
 The application is **prepended** to the existing list:
 ```yaml
-value: "{{ [policy_creation_application] + existing_applications }}"
+value: "{{ [lookup_policy_application] + existing_applications }}"
 ```
 
 This places the new application at the beginning of the group's member list.
@@ -75,7 +75,7 @@ This file is included from `main.yml` when preset policies match:
     file: preset/add_application_to_preset_group.yml
   when:
     - application_group is defined
-    - policy_creation_application is defined
+    - lookup_policy_application is defined
 ```
 
 ## Preset Policy Integration
@@ -92,7 +92,7 @@ Example preset policy task:
     policy_creation_policy_match: true
     application_group: "api-applications"
   when:
-    - policy_creation_application is match(".*-api")
+    - lookup_policy_application is match(".*-api")
 ```
 
 ## Output Display
@@ -157,7 +157,7 @@ The task is **partially idempotent**:
 - ⚠️ Consider adding duplicate detection:
 
 ```yaml
-when: policy_creation_application not in policy_creation_existing_group.gathered.value
+when: lookup_policy_application not in policy_creation_existing_group.gathered.value
 ```
 
 ## Prerequisites

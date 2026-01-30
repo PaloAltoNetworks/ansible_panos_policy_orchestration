@@ -37,8 +37,8 @@ See [argument_specs.yml](../../roles/policy_creation/meta/argument_specs.yml) fo
 | `source_user` | str | N/A | Source user for the new policy |
 | `policy_creation_source_ip` | str | N/A | Source IP address or CIDR block |
 | `policy_creation_destination_ip` | str | N/A | Destination IP address or CIDR block |
-| `policy_creation_application` | str | `ssl` | PAN-OS compatible application name |
-| `policy_creation_destination_port` | str | `443` | TCP or UDP port used by the traffic |
+| `lookup_policy_application` | str | `ssl` | PAN-OS compatible application name |
+| `lookup_policy_destination_port` | str | `443` | TCP or UDP port used by the traffic |
 
 ### Common Additional Variables
 
@@ -60,7 +60,7 @@ These variables are commonly used but not defined in argument_specs (referenced 
 |----------|-------------|
 | `policy_creation_config_changed` | Boolean indicating if any configuration changes were made |
 | `policy_creation_policy_match` | Boolean indicating if a preset policy matched |
-| `policy_creation_security_matches_existing_policy` | Boolean indicating if traffic is already permitted |
+| `lookup_policy_security_matches_existing_policy` | Boolean indicating if traffic is already permitted |
 
 ## Task File Reference
 
@@ -106,8 +106,8 @@ The role is organized into several task files, each handling specific functional
           - preset_policies/webserver_outbound.yml
         policy_creation_source_ip: "10.1.1.5/32"
         policy_creation_destination_ip: "8.8.8.8/32"
-        policy_creation_application: "dns"
-        policy_creation_destination_port: "53"
+        lookup_policy_application: "dns"
+        lookup_policy_destination_port: "53"
         provider:
           ip_address: "{{ panorama_ip }}"
           username: "{{ panorama_username }}"

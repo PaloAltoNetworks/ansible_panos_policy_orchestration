@@ -23,12 +23,12 @@ EXAMPLES = '''
   paloaltonetworks.panos.panos_op:
     provider: "{{ provider }}"
     cmd: "show devices connected"
-  register: policy_creation__show_devices_output
+  register: lookup_policy__show_devices_output
 
 - name: Set JSON Object for stdout
   ansible.builtin.set_fact:
-    policy_creation__show_devices_output_dict: >
-      {{ policy_creation__show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}
+    lookup_policy__show_devices_output_dict: >
+      {{ lookup_policy__show_devices_output | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}
 '''
 
 RETURN = '''
