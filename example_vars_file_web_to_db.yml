@@ -3,5 +3,5 @@ policy_creation_source_ip: 10.10.199.5
 policy_creation_destination_ip: 10.10.200.20
 lookup_policy_application: mysql
 policy_creation_policy_files:
-  - ${PWD}/example_outbound_policy_file.yml
-  - ${PWD}/example_web_to_database_policy_file.yml
+  - example_outbound_policy_file.yml
+  - example_web_to_database_policy_file.yml
