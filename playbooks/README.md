@@ -15,7 +15,7 @@ Performs a lookup in the security policy based on the given data.
 ---
 policy_creation_source_ip: 110.33.122.75
 policy_creation_destination_ip: 10.10.10.5
-policy_creation_application: ssh
+lookup_policy_application: ssh
 policy_creation_policy_files:
   - example_outbound_policy_file.yml
   - example_web_to_database_policy_file.yml
@@ -36,7 +36,7 @@ Creates new policies or adds objects to existing groups based on their preset po
 ---
 policy_creation_source_ip: 110.33.122.75
 policy_creation_destination_ip: 10.10.10.5
-policy_creation_application: ssh
+lookup_policy_application: ssh
 policy_creation_policy_files:
   - example_outbound_policy_file.yml
   - example_web_to_database_policy_file.yml

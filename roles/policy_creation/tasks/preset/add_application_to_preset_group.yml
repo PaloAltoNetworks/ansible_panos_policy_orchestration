@@ -15,14 +15,14 @@
     provider: "{{ provider }}"
     device_group: "{{ policy_creation_device_group }}"
     name: "{{ application_group }}"
-    value: "{{ [policy_creation_application] + policy_creation_existing_group.gathered.value }}"
+    value: "{{ [lookup_policy_application] + policy_creation_existing_group.gathered.value }}"
     state: present
   register: policy_creation_group_addition
 
 - name: Display results
   ansible.builtin.debug:
     msg: |-
-      App object: {{ policy_creation_application }}
+      App object: {{ lookup_policy_application }}
       Added to group: {{ application_group }}
       Device group: {{ policy_creation_device_group }}
       Status: {{ 'SUCCESS' if policy_creation_group_addition is succeeded else 'FAILED' }}

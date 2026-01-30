@@ -21,11 +21,11 @@
 - Default: `ssl`
 - Example: `ssh`, `dns`, `web-browsing`
 
-**`policy_creation_destination_port`** - Destination port number
+**`lookup_policy_destination_port`** - Destination port number
 - Default: `443`
 - Example: `22`, `53`, `80`
 
-**`policy_creation_protocol`** - IP protocol number
+**`lookup_policy_protocol`** - IP protocol number
 - Default: `6` (TCP)
 - Example: `17` (UDP), `1` (ICMP)
 

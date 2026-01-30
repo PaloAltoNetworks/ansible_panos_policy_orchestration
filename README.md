@@ -146,7 +146,7 @@ policy_creation_policy_files:
   tasks:
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ policy_creation_security_policy_match_result }}"
+        msg: "{{ lookup_policy_security_policy_match_result }}"
 ```
 
 ### Execute the playbook

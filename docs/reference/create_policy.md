@@ -32,7 +32,7 @@ flowchart TD
 |----------|-------------|
 | `policy_creation_source_ip` | Source IP address or CIDR block |
 | `policy_creation_destination_ip` | Destination IP address or CIDR block |
-| `policy_creation_application` | Application name for the rule |
+| `lookup_policy_application` | Application name for the rule |
 | `provider` | PAN-OS connection details (ip_address, username, password) |
 
 ## Optional Variables
@@ -40,7 +40,7 @@ flowchart TD
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `policy_creation_source_zones` | Source zones | `['any']` |
-| `policy_creation_destination_zones` | Destination zones | `['any']` |
+| `policy_creation__security_matches_existing_policy` | Destination zones | `['any']` |
 | `policy_creation_tag` | Policy tag | `default_new_policy_tag` |
 | `policy_creation_device_group` | Target device group | `default_new_policy_device_group` |
 | `default_rule_location` | Rule placement (before/after) | N/A |
@@ -153,7 +153,7 @@ This file is included from `main.yml`:
       ansible.builtin.set_fact:
         policy_creation_config_changed: true
   when:
-    - not policy_creation_security_matches_existing_policy
+    - not lookup_policy_security_matches_existing_policy
 ```
 
 Only runs when:

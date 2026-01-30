@@ -100,7 +100,7 @@ at runtime.
     policy_match: true # Set the fact that we did match a policy
     policy_creation_source_address_group: PRESET_JUMPHOST_INBOUND_SOURCE # In this case, the policy preset is an address_group type
     policy_creation_destination_address_group: PRESET_JUMPHOST_INBOUND_DESTINATION # In this case, the policy preset is an address_group type
-    policy_creation_application_group: PRESET_JUMPHOST_APPS # If an application is passed, we should also include it in the policy.
+    lookup_policy_application_group: PRESET_JUMPHOST_APPS # If an application is passed, we should also include it in the policy.
     policy_creation_device_group: Lab # Finally, we set the device group!
   when:
     - policy_creation_source_ip is defined
@@ -133,7 +133,7 @@ in the one file - it's up to you!
       password: "{{ lookup('env', 'PAN_PASSWORD') }}"
     policy_creation_source_ip: 8.8.8.8
     policy_creation_destination_ip: 10.10.11.5
-    policy_creation_application: ssh
+    lookup_policy_application: ssh
     policy_creation_policy_files:
       - ssh_jumpserver_inbound_access.yml # <---- Replace with the path to your policy file, or files
 
@@ -143,7 +143,7 @@ in the one file - it's up to you!
   tasks:
     - name: Print the results
       ansible.builtin.debug:
-        msg: "{{ policy_creation_security_policy_match_result }}"
+        msg: "{{ lookup_policy_security_policy_match_result }}"
 ```
 
 ```shell

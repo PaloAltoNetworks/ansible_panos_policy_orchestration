@@ -24,12 +24,12 @@ argument_specs:
         type: "str"
         required: false
         description: "The the destination IP for the new policy"
-      policy_creation_application:
+      lookup_policy_application:
         type: "str"
         required: false
         default: ssl
         description: "The PAN-OS compatible Application for the policy."
-      policy_creation_destination_port:
+      lookup_policy_destination_port:
         type: "str"
         required: false
         default: "443"

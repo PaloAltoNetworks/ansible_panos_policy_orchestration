@@ -37,14 +37,14 @@ flowchart TD
 
 | Variable | Description |
 |----------|-------------|
-| `policy_creation__show_route` | List to accumulate routing table results (persists across loop iterations) |
-| `policy_creation__show_route_result` | Raw result from the routing table command |
-| `policy_creation__show_route_result_dict` | Parsed JSON dictionary of routing table |
-| `policy_creation__virtual_routers` | List of all virtual routers found in the routing table |
-| `policy_creation__test_routing_result` | Results from FIB lookup tests on each virtual router |
-| `policy_creation_interface_list` | List of outbound interfaces for the target IP |
-| `policy_creation__show_interfaces_result` | Raw result from show interface all command |
-| `policy_creation_destination_zones` | List of zones associated with the target IP (accumulated across devices) |
+| `lookup_policy__show_route` | List to accumulate routing table results (persists across loop iterations) |
+| `lookup_policy__show_route_result` | Raw result from the routing table command |
+| `lookup_policy__show_route_result_dict` | Parsed JSON dictionary of routing table |
+| `lookup_policy__virtual_routers` | List of all virtual routers found in the routing table |
+| `lookup_policy__test_routing_result` | Results from FIB lookup tests on each virtual router |
+| `lookup_policy_interface_list` | List of outbound interfaces for the target IP |
+| `lookup_policy__show_interfaces_result` | Raw result from show interface all command |
+| `lookup_policy__destination_zones` | List of zones associated with the target IP (accumulated across devices) |
 
 ## Dependencies
 
@@ -94,7 +94,7 @@ This determines which interface would be used to route traffic to the target IP.
 1. **Routing Analysis** - Determines outbound interface(s) via FIB lookup
 2. **Interface Query** - Gets all interface configurations with `show interface all`
 3. **Zone Mapping** - Matches interface names to their assigned zones
-4. **Accumulation** - Adds zones to `policy_creation_destination_zones` list
+4. **Accumulation** - Adds zones to `lookup_policy__destination_zones` list
 
 ## Important Behavior
 
@@ -105,12 +105,12 @@ This determines which interface would be used to route traffic to the target IP.
 ### Multiple Devices
 - When called in a loop across multiple devices, zones are accumulated
 - A single IP may resolve to different zones on different firewalls
-- The `policy_creation_destination_zones` variable grows with each device iteration
+- The `lookup_policy__destination_zones` variable grows with each device iteration
 
 ### Zone List Accumulation
 The zones are accumulated using this pattern:
 ```yaml
-policy_creation_destination_zones | default([]) + [new_zones] | default([])
+lookup_policy__destination_zones | default([]) + [new_zones] | default([])
 ```
 This ensures zones from multiple devices are combined into a single list.
 
@@ -124,16 +124,16 @@ This file is included from `lookup_policy.yml`:
     file: get_zone_by_ip.yml
   vars:
     _target_ip: "{{ policy_creation_destination_ip }}"
-  with_items: "{{ policy_creation___device_list }}"
+  with_items: "{{ lookup_policy__device_list }}"
   when:
-    - not policy_creation_security_matches_existing_policy
+    - not lookup_policy_security_matches_existing_policy
 ```
 
 Key points:
 - Only runs when no existing policy matches
 - Runs once per device in the device list
 - The `_target_ip` variable is set to the destination IP
-- Results accumulate in `policy_creation_destination_zones`
+- Results accumulate in `lookup_policy__destination_zones`
 
 ## Example Scenario
 
@@ -144,7 +144,7 @@ Given:
 - Firewall 2: Routes via interface `ethernet1/2` in zone `internet`
 
 Result:
-- `policy_creation_destination_zones` = `['untrust', 'internet']`
+- `lookup_policy__destination_zones` = `['untrust', 'internet']`
 
 ## Performance Notes
 

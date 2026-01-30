@@ -34,9 +34,9 @@ flowchart TD
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `policy_creation_destination_port` | Destination port for testing | `443` |
-| `policy_creation_protocol` | IP protocol number (6=TCP, 17=UDP) | `6` |
-| `policy_creation_application` | Application for testing | `ssl` |
+| `lookup_policy_destination_port` | Destination port for testing | `443` |
+| `lookup_policy_protocol` | IP protocol number (6=TCP, 17=UDP) | `6` |
+| `lookup_policy_application` | Application for testing | `ssl` |
 | `policy_creation_device_group` | Target device group | N/A |
 | `default_new_policy_device_group` | Fallback device group | N/A |
 | `default_test_policy_serial_number` | Specific firewall serial for testing | N/A |
@@ -45,12 +45,12 @@ flowchart TD
 
 | Variable | Description |
 |----------|-------------|
-| `_policy_creation_device_group` | Internal variable for the operating device group |
-| `policy_creation__show_devices_output` | Raw output from `show devices connected` command |
-| `policy_creation__show_devices_output_dict` | Parsed JSON dictionary of connected devices |
-| `policy_creation___device_list` | List of devices to test against |
-| `policy_creation_security_matches_existing_policy` | Boolean indicating if traffic is already permitted |
-| `policy_creation_destination_zones` | List of calculated destination zones |
+| `lookup_policy__device_group` | Internal variable for the operating device group |
+| `lookup_policy__show_devices_output` | Raw output from `show devices connected` command |
+| `lookup_policy__show_devices_output_dict` | Parsed JSON dictionary of connected devices |
+| `lookup_policy__device_list` | List of devices to test against |
+| `lookup_policy_security_matches_existing_policy` | Boolean indicating if traffic is already permitted |
+| `lookup_policy__destination_zones` | List of calculated destination zones |
 
 ## Dependencies
 
@@ -73,7 +73,7 @@ flowchart TD
   - Improves performance in large environments
 
 ### Zone Calculation
-- Only runs if `policy_creation_security_matches_existing_policy` is false
+- Only runs if `lookup_policy_security_matches_existing_policy` is false
 - Determines destination zones by:
   - Getting routing table from each device
   - Running FIB lookup for the destination IP

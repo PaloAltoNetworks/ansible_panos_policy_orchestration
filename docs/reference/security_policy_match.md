@@ -35,15 +35,15 @@ flowchart TD
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `policy_creation_application` | Application to test | `ssl` |
+| `lookup_policy_application` | Application to test | `ssl` |
 
 ## Generated Variables
 
 | Variable | Description |
 |----------|-------------|
-| `policy_creation_test_xml` | XML command for the security-policy-match test |
-| `policy_creation_security_policy_match_result` | Raw result from the panos_op command |
-| `policy_creation_security_matches_existing_policy` | Boolean indicating if traffic matches an existing policy |
+| `lookup_policy_test_xml` | XML command for the security-policy-match test |
+| `lookup_policy_security_policy_match_result` | Raw result from the panos_op command |
+| `lookup_policy_security_matches_existing_policy` | Boolean indicating if traffic matches an existing policy |
 
 ## Test XML Format
 
@@ -97,7 +97,7 @@ This file is included from `lookup_policy.yml` in a loop:
 - name: Test the security policy - determines if a new policy is needed
   ansible.builtin.include_tasks:
     file: security_policy_match.yml
-  with_items: "{{ policy_creation___device_list }}"
+  with_items: "{{ lookup_policy__device_list }}"
 ```
 
 Each iteration tests against a different firewall serial number from the device list.
@@ -108,7 +108,7 @@ Each iteration tests against a different firewall serial number from the device 
 - Line 9 contains a typo: `policy_creation_sourcce_ip` (should be `policy_creation_source_ip`)
   - This may cause the source IP to be undefined in the test
 - Protocol and port are hardcoded rather than using role variables
-  - Does not respect `policy_creation_protocol` or `policy_creation_destination_port`
+  - Does not respect `lookup_policy_protocol` or `lookup_policy_destination_port`
 
 ### Behavior
 - Tests are executed against individual firewalls using their serial numbers
