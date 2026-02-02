@@ -10,7 +10,7 @@
           <destination>{{ policy_creation_destination_ip }}</destination>
           <application>{{ lookup_policy_application | default('ssl') }}</application>
           <protocol>6</protocol>
-          <destination-port>443</destination-port>
+          <destination-port>{{ lookup_policy_destination_port }}</destination-port>
         </security-policy-match>
       </test>
 
