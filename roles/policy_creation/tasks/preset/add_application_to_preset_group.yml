@@ -18,6 +18,7 @@
     value: "{{ [lookup_policy_application] + policy_creation_existing_group.gathered.value }}"
     state: present
   register: policy_creation_group_addition
+  when: lookup_policy_application not in policy_creation_existing_group.gathered.value
 
 - name: Display results
   ansible.builtin.debug:
