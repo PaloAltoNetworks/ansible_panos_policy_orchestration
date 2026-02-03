@@ -7,8 +7,8 @@
   vars:
     provider:
       ip_address: "{{ ansible_host }}"
-      username: "{{ lookup('env', 'PAN_USERNAME') }}"
-      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+      username: "{{ lookup('env', 'ANSIBLE_NET_USERNAME') }}"
+      password: "{{ lookup('env', 'ANSIBLE_NET_PASSWORD') }}"
     serialno: "{{ lookup('env', 'PAN_TEST_SERIAL') }}"
 
   tasks:

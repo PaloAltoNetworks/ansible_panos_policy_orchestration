@@ -68,11 +68,11 @@ all:
       hosts:
         lab-panorama01:
           ansible_host: < YOUR PANORAMA HOSTNAME OR IP HERE >
-          # Password should be provided via PAN_PASSWORD environment variable
-          # Example: export PAN_PASSWORD="admin_password"
+          # Password should be provided via ANSIBLE_NET_PASSWORD environment variable
+          # Example: export ANSIBLE_NET_PASSWORD="admin_password"
           
-          # Username should be provided via PAN_USERNAME environment variable
-          # Example: export PAN_USERNAME="admin"
+          # Username should be provided via ANSIBLE_NET_USERNAME environment variable
+          # Example: export ANSIBLE_NET_USERNAME="admin"
       vars:
         # Common variables
         ansible_connection: local
