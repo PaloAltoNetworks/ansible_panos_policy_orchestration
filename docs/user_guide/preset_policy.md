@@ -129,8 +129,8 @@ in the one file - it's up to you!
   vars:
     provider:
       ip_address: "{{ ansible_host }}"
-      username: "{{ lookup('env', 'PAN_USERNAME') }}"
-      password: "{{ lookup('env', 'PAN_PASSWORD') }}"
+      username: "{{ lookup('env', 'ANSIBLE_NET_USERNAME') }}"
+      password: "{{ lookup('env', 'ANSIBLE_NET_PASSWORD') }}"
     policy_creation_source_ip: 8.8.8.8
     policy_creation_destination_ip: 10.10.11.5
     lookup_policy_application: ssh
