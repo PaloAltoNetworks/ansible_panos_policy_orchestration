@@ -1,3 +1,11 @@
+## [1.4.6](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.5...v1.4.6) (2026-02-03)
+
+
+### Bug Fixes
+
+* Application group additions now do not create duplicate entries ([71f1a6d](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/71f1a6d7318cdd5d134de32b9a099215e472b62f))
+* Envvars now are AWX compatible [#22](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/issues/22) ([8b0453d](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/commit/8b0453d1abbaa4a992dc69249629b53be300fcd1))
+
 ## [1.4.5](https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration/compare/v1.4.4...v1.4.5) (2026-01-30)
 
 
