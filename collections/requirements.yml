@@ -1,0 +1,70 @@
+---
+# Collections Requirements File for AWX/Ansible Automation Platform
+#
+# AWX will automatically install these collections when the project is synced
+# if "Collections" is enabled in the project settings.
+#
+# For AWX Configuration:
+# 1. In your AWX Project settings, ensure the following are set:
+#    - Source Control URL: <your-git-repo-url>
+#    - Source Control Branch/Tag/Commit: master (or your branch)
+#    - Options: ✓ Update Revision on Launch
+# 2. In your Job Template settings:
+#    - Check "Enable Collection(s) Download"
+#    - This tells AWX to run: ansible-galaxy collection install -r collections/requirements.yml
+
+collections:
+  # PAN-OS Collection - Required dependency
+  # This provides all the panos_* modules (panos_address_object, panos_security_rule, etc.)
+  - name: paloaltonetworks.panos
+    version: ">=3.1.1"
+    source: https://galaxy.ansible.com
+
+  # Ansible Utils Collection - Required for network_in_network filter
+  # Used in policy matching logic
+  - name: ansible.utils
+    version: ">=6.0.0"
+    source: https://galaxy.ansible.com
+
+  # Ansible Netcommon Collection - Required by paloaltonetworks.panos
+  - name: ansible.netcommon
+    version: ">=8.0.0"
+    source: https://galaxy.ansible.com
+
+  # THIS Collection - PAN-OS Policy Automation
+  # Option 1: Install from Ansible Galaxy (if published)
+  - name: paloaltonetworks.panos_policy_automation
+    # Uncomment this line if the collection is published to Galaxy:
+    # source: https://galaxy.ansible.com
+
+  # Option 2: Install from Git repository (for development/private repos)
+  # Uncomment and configure this section if using Git:
+  # - name: https://github.com/PaloAltoNetworks/ansible_panos_policy_orchestration.git
+  #   type: git
+  #   version: master
+
+  # Option 3: Install from a local tarball or HTTP URL
+  # If you've built the collection and hosted it somewhere:
+  # - name: https://your-server.com/path/to/paloaltonetworks-panos_policy_automation-1.4.4.tar.gz
+  #   type: file
+
+# IMPORTANT NOTES FOR AWX:
+#
+# 1. Collections Path in AWX:
+#    AWX installs collections to: /runner/requirements_collections/
+#    This is automatically in the collection search path.
+#
+# 2. If using a private Git repo for this collection:
+#    - Add SCM credentials to AWX
+#    - Use the git URL format above
+#    - Ensure the repo is accessible from AWX
+#
+# 3. If hosting the built collection tarball:
+#    - Build: ansible-galaxy collection build
+#    - Host the .tar.gz file on a web server or Artifactory
+#    - Use the file URL format above
+#
+# 4. Environment Variables in AWX:
+#    Define these in AWX Credentials (Custom Credential Type) or Job Template extra vars:
+#    - PAN_USERNAME
+#    - PAN_PASSWORD
