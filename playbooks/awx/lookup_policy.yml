@@ -1,0 +1,101 @@
+---
+# AWX-Compatible Policy Lookup Playbook
+#
+# This playbook tests if the given traffic is already allowed by an existing security policy.
+#
+# AWX Setup Required:
+# 1. Project must have collections/requirements.yml configured
+# 2. Job Template must have "Enable Collection(s) Download" checked
+# 3. Credentials must provide PAN_USERNAME and PAN_PASSWORD (see below)
+#
+# Required Extra Variables (set in AWX Survey or Job Template):
+#   - policy_creation_source_ip: Source IP address (e.g., "10.10.12.11")
+#   - policy_creation_destination_ip: Destination IP address (e.g., "8.8.8.8")
+#   - policy_creation_application: Application name (e.g., "web-browsing", "ssh")
+#
+# Optional Variables:
+#   - policy_creation_destination_port: Destination port (default: "443")
+#   - policy_creation_protocol: IP protocol number (default: "6" for TCP)
+#
+# Inventory Requirements:
+#   - Host or group with ansible_host pointing to Panorama
+#   - Variables: ansible_connection: local
+
+- name: Lookup Security Policy Match
+  hosts: all
+  connection: local
+  gather_facts: true
+
+  vars:
+    # Provider configuration for PAN-OS modules
+    # In AWX, PAN_USERNAME and PAN_PASSWORD should come from a Custom Credential
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ pan_username | default(lookup('env', 'PAN_USERNAME')) }}"
+      password: "{{ pan_password | default(lookup('env', 'PAN_PASSWORD')) }}"
+
+  # Pre-flight checks
+  pre_tasks:
+    - name: Validate required variables are provided
+      ansible.builtin.assert:
+        that:
+          - policy_creation_source_ip is defined
+          - policy_creation_source_ip | length > 0
+          - policy_creation_destination_ip is defined
+          - policy_creation_destination_ip | length > 0
+          - policy_creation_application is defined
+          - policy_creation_application | length > 0
+          - ansible_host is defined
+        fail_msg: |
+          Missing required variables. Please ensure the following are set:
+          - policy_creation_source_ip
+          - policy_creation_destination_ip
+          - policy_creation_application
+          - ansible_host (in inventory)
+        success_msg: "All required variables present"
+
+    - name: Validate credentials are available
+      ansible.builtin.assert:
+        that:
+          - provider.username is defined
+          - provider.username | length > 0
+          - provider.password is defined
+          - provider.password | length > 0
+        fail_msg: |
+          PAN-OS credentials not found. In AWX, ensure:
+          1. Custom Credential Type is created for PAN-OS
+          2. Credential is associated with the Job Template
+          Or set PAN_USERNAME and PAN_PASSWORD environment variables
+        success_msg: "PAN-OS credentials validated"
+
+    - name: Display lookup parameters
+      ansible.builtin.debug:
+        msg:
+          - "Testing policy for:"
+          - "  Source IP: {{ policy_creation_source_ip }}"
+          - "  Destination IP: {{ policy_creation_destination_ip }}"
+          - "  Application: {{ policy_creation_application }}"
+          - "  Panorama: {{ provider.ip_address }}"
+
+  # Execute the lookup_policy role
+  roles:
+    - role: paloaltonetworks.panos_policy_automation.lookup_policy
+
+  # Post-execution tasks
+  tasks:
+    - name: Display policy match results
+      ansible.builtin.debug:
+        msg:
+          - "=== Policy Lookup Results ==="
+          - "Policy Match Found: {{ policy_creation_security_matches_existing_policy | default('Unknown') }}"
+          - "{% if policy_creation_security_matches_existing_policy is defined %}{% if policy_creation_security_matches_existing_policy %}Traffic is ALLOWED by existing policy{% else %}Traffic is BLOCKED - no matching policy{% endif %}{% endif %}"
+
+    - name: Create artifact for AWX
+      ansible.builtin.set_stats:
+        data:
+          policy_match: "{{ policy_creation_security_matches_existing_policy | default(false) }}"
+          source_ip: "{{ policy_creation_source_ip }}"
+          destination_ip: "{{ policy_creation_destination_ip }}"
+          application: "{{ policy_creation_application }}"
+          status: "{{ 'ALLOWED' if policy_creation_security_matches_existing_policy | default(false) else 'BLOCKED' }}"
+        per_host: false
