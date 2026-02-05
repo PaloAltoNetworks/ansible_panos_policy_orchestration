@@ -1,0 +1,19 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: true
+  name: Example Policy Lookup Playbook
+
+  vars:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ lookup('env', 'ANSIBLE_NET_USERNAME') }}"
+      password: "{{ lookup('env', 'ANSIBLE_NET_PASSWORD') }}"
+
+  roles:
+    - lookup_policy
+
+  tasks:
+    - name: Print the results
+      ansible.builtin.debug:
+        msg: "{{ lookup_policy_security_policy_match_result | paloaltonetworks.panos_policy_automation.panos_op_stdout_to_dict }}"
