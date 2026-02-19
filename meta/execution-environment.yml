@@ -18,4 +18,4 @@ dependencies:
   ansible_runner:
     package_pip: ansible-runner
 build_arg_defaults:
- ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '--ignore-certs'
+  ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '--ignore-certs'
