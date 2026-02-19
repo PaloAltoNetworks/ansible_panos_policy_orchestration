@@ -19,7 +19,13 @@ CCTV
 
 Example Web to DB
 
+Run the lookup first
 ```shell
-ansible-playbook -i inventory_real.yml --extra-vars=@example_vars_file_web_to_db.yml example_playbook.yml
+ansible-playbook -i inventory_real.yml --extra-vars=@./example_vars_file_web_to_db.yml paloaltonetworks.panos_policy_automation.examples.lookup_policy
 ```
 
+Then, run creation
+
+```shell
+ansible-playbook -i inventory_real.yml --extra-vars=@./example_vars_file_web_to_db.yml paloaltonetworks.panos_policy_automation.examples.create_policy
+```

@@ -1,0 +1,78 @@
+---
+name: CI
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+' # Matches tags like v1.0.0, v2.1.5, etc. This CI gets triggered by Semantic release.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: 3.11
+
+      - name: Install Ansible Builder
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-builder
+
+      - name: Build docker context
+        run: |
+          ansible-builder create -f meta/execution-environment.yml --output-filename Dockerfile
+
+      - name: login to GHCR
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List directories
+        run: |
+          ls -l ./context
+
+      # produce docker tags for semver if on a tag, otherwise take ref branch name
+      # latest tag is only produced for semver operating on a tag
+      - name: determine docker tags and labels
+        id: meta
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
+        with: # labels and annotations are overwritten for image.title information
+          context: git # git - this ensures to reference the current git context instead of workflow context (context info ref/sha)
+          images: ghcr.io/paloaltonetworks/panos_policy_automation-rhel9
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=ref,event=branch
+            type=ref,event=tag
+          labels: |
+            org.opencontainers.image.title=panos_policy_automation-rhel9
+          annotations: |
+            org.opencontainers.image.title=panos_policy_automation-rhel9
+
+      - name: build and publish
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
+        with:
+          context: "./context/"
+          file: "./context/Dockerfile"
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: ${{ inputs.release }}
